@@ -5,7 +5,6 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
-  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -25,16 +24,6 @@ module.exports = {
           mediumGray: '#6C757D', // Cinza médio (textos secundários)
           darkGray: '#343A40',  // Cinza escuro (textos principais)
           black: '#212529',     // Preto suave (textos importantes)
-        },
-        // Paleta para tema escuro
-        dark: {
-          bg: '#0F0F0F',        // Fundo escuro principal
-          surface: '#1A1A1A',   // Superfícies
-          card: '#252525',      // Cards
-          border: '#333333',    // Bordas
-          text: '#FFFFFF',      // Texto principal
-          'text-secondary': '#CCCCCC', // Texto secundário
-          'text-muted': '#999999',     // Texto esmaecido
         },
         // Cores de destaque da marca
         accent: {
