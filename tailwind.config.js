@@ -5,6 +5,7 @@ module.exports = {
     './components/**/*.{js,ts,jsx,tsx,mdx}',
     './app/**/*.{js,ts,jsx,tsx,mdx}',
   ],
+  darkMode: 'class',
   theme: {
     extend: {
       colors: {
@@ -16,7 +17,7 @@ module.exports = {
           cream: '#F5F1E8',     // Creme suave
           bronze: '#CD7F32',    // Bronze
         },
-        // Tons neutros elegantes da marca (versão clara)
+        // Tons neutros elegantes da marca (versão clara) - MANTIDO INALTERADO
         elegant: {
           white: '#FFFFFF',     // Branco puro (fundo principal)
           lightGray: '#F8F9FA', // Cinza muito claro (fundo secundário)
@@ -24,6 +25,16 @@ module.exports = {
           mediumGray: '#6C757D', // Cinza médio (textos secundários)
           darkGray: '#343A40',  // Cinza escuro (textos principais)
           black: '#212529',     // Preto suave (textos importantes)
+        },
+        // Paleta para tema escuro inspirada na imagem do logo
+        darkTheme: {
+          bg: '#1a1a1a',        // Fundo escuro principal (como na imagem)
+          surface: '#2a2a2a',   // Superfícies cards
+          card: '#333333',      // Cards com transparência
+          border: '#404040',    // Bordas sutis
+          text: '#ffffff',      // Texto principal branco
+          textSecondary: '#e0e0e0', // Texto secundário
+          textMuted: '#b0b0b0', // Texto esmaecido
         },
         // Cores de destaque da marca
         accent: {

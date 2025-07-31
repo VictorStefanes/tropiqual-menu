@@ -9,7 +9,7 @@ export default function Header() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative bg-gradient-to-r from-elegant-white via-elegant-lightGray to-elegant-cream border-b border-tropiqual-gold/30"
+      className="relative bg-gradient-to-r from-elegant-white via-elegant-lightGray to-elegant-cream dark:from-darkTheme-bg dark:via-darkTheme-surface dark:to-darkTheme-card border-b border-tropiqual-gold/30 dark:border-tropiqual-gold/50"
     >
       {/* Hero Section */}
       <div className="relative h-screen flex items-center justify-center">
@@ -33,7 +33,7 @@ export default function Header() {
               SUSHI & GRILL
             </p>
             <div className="w-24 h-1 tropiqual-gradient-bg mx-auto mb-8"></div>
-            <p className="text-lg md:text-xl text-elegant-darkGray mb-8 leading-relaxed">
+            <p className="text-lg md:text-xl text-elegant-darkGray dark:text-darkTheme-textSecondary mb-8 leading-relaxed">
               Comida japonesa con alma Nikkei, carnes y<br />
               pescados a la brasa, cócteles de autor,<br />
               y un ligero acento occidental.
@@ -46,28 +46,28 @@ export default function Header() {
             transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12"
           >
-            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 transition-colors">
+            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 dark:hover:bg-tropiqual-gold/20 transition-colors">
               <MapPin className="w-8 h-8 text-tropiqual-gold mx-auto mb-3" />
-              <h3 className="font-semibold text-elegant-black mb-2">Ubicación</h3>
-              <p className="text-elegant-darkGray text-sm">
+              <h3 className="font-semibold text-elegant-black dark:text-darkTheme-text mb-2">Ubicación</h3>
+              <p className="text-elegant-darkGray dark:text-darkTheme-textSecondary text-sm">
                 Plaza de la Encarnación 23<br />
                 41003 Sevilla
               </p>
             </div>
             
-            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 transition-colors">
+            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 dark:hover:bg-tropiqual-gold/20 transition-colors">
               <Clock className="w-8 h-8 text-tropiqual-gold mx-auto mb-3" />
-              <h3 className="font-semibold text-elegant-black mb-2">Horarios</h3>
-              <p className="text-elegant-darkGray text-sm">
+              <h3 className="font-semibold text-elegant-black dark:text-darkTheme-text mb-2">Horarios</h3>
+              <p className="text-elegant-darkGray dark:text-darkTheme-textSecondary text-sm">
                 Dom-Jue: 18:00-02:00<br />
                 Vie-Sáb: 18:00-03:00
               </p>
             </div>
             
-            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 transition-colors">
+            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 dark:hover:bg-tropiqual-gold/20 transition-colors">
               <Phone className="w-8 h-8 text-tropiqual-gold mx-auto mb-3" />
-              <h3 className="font-semibold text-elegant-black mb-2">Contacto</h3>
-              <p className="text-elegant-darkGray text-sm">
+              <h3 className="font-semibold text-elegant-black dark:text-darkTheme-text mb-2">Contacto</h3>
+              <p className="text-elegant-darkGray dark:text-darkTheme-textSecondary text-sm">
                 +34 685 959 705<br />
                 @tropiqualsevilla
               </p>
