@@ -26,8 +26,10 @@ export default function Header() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ delay: 0.2, duration: 0.6, ease: "easeOut" }}
           >
-            <h1 className="text-6xl md:text-8xl font-bold mb-6 font-elegant">
-              <span className="gradient-text">TROPIQUAL</span>
+            <h1 className="text-6xl md:text-8xl font-brand font-black mb-6 tracking-wider uppercase">
+              <span className="text-elegant-black dark:text-darkTheme-text">TROPI</span>
+              <span className="text-tropiqual-gold brand-q">Q</span>
+              <span className="text-elegant-black dark:text-darkTheme-text">UAL</span>
             </h1>
             <p className="text-xl md:text-2xl text-tropiqual-lightGold dark:text-tropiqual-gold mb-4 font-light">
               SUSHI & GRILL

@@ -71,6 +71,8 @@ module.exports = {
       fontFamily: {
         'japanese': ['Noto Sans JP', 'sans-serif'],
         'elegant': ['Playfair Display', 'serif'],
+        'title': ['Inter', 'system-ui', 'sans-serif'], // Fonte moderna para o título
+        'brand': ['Inter', 'system-ui', 'sans-serif'], // Fonte da marca
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',

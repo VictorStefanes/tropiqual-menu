@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
@@ -43,6 +43,32 @@
     background: linear-gradient(135deg, #D4AF37 0%, #B8941F 50%, #CD7F32 100%);
   }
   
+  /* Estilo especial para a letra Q destacada */
+  .brand-q {
+    position: relative;
+    display: inline-block;
+    text-shadow: 
+      0 0 10px rgba(212, 175, 55, 0.5),
+      0 0 20px rgba(212, 175, 55, 0.3),
+      0 0 30px rgba(212, 175, 55, 0.2);
+    animation: glow-pulse 3s ease-in-out infinite alternate;
+  }
+  
+  @keyframes glow-pulse {
+    0% { 
+      text-shadow: 
+        0 0 10px rgba(212, 175, 55, 0.5),
+        0 0 20px rgba(212, 175, 55, 0.3),
+        0 0 30px rgba(212, 175, 55, 0.2);
+    }
+    100% { 
+      text-shadow: 
+        0 0 15px rgba(212, 175, 55, 0.7),
+        0 0 25px rgba(212, 175, 55, 0.5),
+        0 0 35px rgba(212, 175, 55, 0.3);
+    }
+  }
+
   .glass-card {
     @apply bg-elegant-cream/80 dark:bg-darkTheme-card/80 backdrop-blur-md border border-tropiqual-gold/30 dark:border-tropiqual-gold/50 rounded-xl shadow-md;
     transform: translateZ(0);
