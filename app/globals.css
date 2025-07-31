@@ -1,0 +1,82 @@
+@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  body {
+    @apply bg-elegant-white text-elegant-black font-japanese;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  
+  * {
+    -webkit-tap-highlight-color: transparent;
+  }
+  
+  /* Hardware acceleration for better scroll performance */
+  .scroll-smooth {
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+  }
+}
+
+@layer components {
+  .section-padding {
+    @apply px-4 sm:px-6 lg:px-8;
+  }
+  
+  .card-shadow {
+    @apply shadow-lg shadow-gray-200;
+  }
+  
+  .gradient-text {
+    @apply bg-tropiqual-gradient bg-clip-text text-transparent;
+  }
+  
+  .tropiqual-gradient-bg {
+    background: linear-gradient(135deg, #D4AF37 0%, #B8941F 50%, #CD7F32 100%);
+  }
+  
+  .glass-card {
+    @apply bg-elegant-cream/80 backdrop-blur-md border border-tropiqual-gold/30 rounded-xl shadow-md;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+  }
+  
+  /* Performance optimizations */
+  .optimize-scroll {
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+  }
+  
+  .gpu-acceleration {
+    transform: translateZ(0);
+    will-change: transform;
+  }
+  
+  /* Elegant Tropiqual styles */
+  .elegant-title {
+    @apply font-elegant text-tropiqual-gold;
+  }
+  
+  .tropiqual-button {
+    @apply bg-tropiqual-gradient hover:opacity-90 text-elegant-white font-semibold transition-all duration-200;
+  }
+  
+  .elegant-card {
+    @apply bg-elegant-lightGray/50 border border-tropiqual-gold/40 backdrop-blur-sm shadow-sm;
+  }
+}
+
+.parallax {
+  background-attachment: fixed;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: cover;
+}
