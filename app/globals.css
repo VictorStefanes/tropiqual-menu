@@ -9,7 +9,7 @@
   }
   
   body {
-    @apply bg-elegant-white dark:bg-dark-bg text-elegant-black dark:text-dark-text font-japanese;
+    @apply bg-elegant-white dark:bg-gray-900 text-elegant-black dark:text-white font-japanese;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     transition: background-color 0.3s ease, color 0.3s ease;
@@ -44,7 +44,7 @@
   }
   
   .glass-card {
-    @apply bg-elegant-cream/80 dark:bg-dark-card/80 backdrop-blur-md border border-tropiqual-gold/30 dark:border-tropiqual-gold/50 rounded-xl shadow-md;
+    @apply bg-elegant-cream/80 dark:bg-gray-800/80 backdrop-blur-md border border-tropiqual-gold/30 dark:border-tropiqual-gold/50 rounded-xl shadow-md;
     transform: translateZ(0);
     backface-visibility: hidden;
     perspective: 1000px;
