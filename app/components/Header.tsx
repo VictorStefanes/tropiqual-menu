@@ -9,7 +9,7 @@ export default function Header() {
       initial={{ y: -50, opacity: 0 }}
       animate={{ y: 0, opacity: 1 }}
       transition={{ duration: 0.6, ease: "easeOut" }}
-      className="relative bg-gradient-to-r from-elegant-white via-elegant-lightGray to-elegant-cream border-b border-tropiqual-gold/30"
+      className="relative bg-gradient-to-r from-elegant-white via-elegant-lightGray to-elegant-cream dark:from-dark-bg dark:via-dark-surface dark:to-dark-card border-b border-tropiqual-gold/30 dark:border-tropiqual-gold/50"
     >
       {/* Hero Section */}
       <div className="relative h-screen flex items-center justify-center">
@@ -29,11 +29,11 @@ export default function Header() {
             <h1 className="text-6xl md:text-8xl font-bold mb-6 font-elegant">
               <span className="gradient-text">TROPIQUAL</span>
             </h1>
-            <p className="text-xl md:text-2xl text-tropiqual-lightGold mb-4 font-light">
+            <p className="text-xl md:text-2xl text-tropiqual-lightGold dark:text-tropiqual-gold mb-4 font-light">
               SUSHI & GRILL
             </p>
             <div className="w-24 h-1 tropiqual-gradient-bg mx-auto mb-8"></div>
-            <p className="text-lg md:text-xl text-elegant-darkGray mb-8 leading-relaxed">
+            <p className="text-lg md:text-xl text-elegant-darkGray dark:text-dark-text-secondary mb-8 leading-relaxed">
               Comida japonesa con alma Nikkei, carnes y<br />
               pescados a la brasa, cócteles de autor,<br />
               y un ligero acento occidental.
@@ -46,28 +46,28 @@ export default function Header() {
             transition={{ delay: 0.4, duration: 0.6, ease: "easeOut" }}
             className="grid grid-cols-1 md:grid-cols-3 gap-6 mt-12"
           >
-            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 transition-colors">
+            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 dark:hover:bg-tropiqual-gold/20 transition-colors">
               <MapPin className="w-8 h-8 text-tropiqual-gold mx-auto mb-3" />
-              <h3 className="font-semibold text-elegant-black mb-2">Ubicación</h3>
-              <p className="text-elegant-darkGray text-sm">
+              <h3 className="font-semibold text-elegant-black dark:text-dark-text mb-2">Ubicación</h3>
+              <p className="text-elegant-darkGray dark:text-dark-text-secondary text-sm">
                 Plaza de la Encarnación 23<br />
                 41003 Sevilla
               </p>
             </div>
             
-            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 transition-colors">
+            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 dark:hover:bg-tropiqual-gold/20 transition-colors">
               <Clock className="w-8 h-8 text-tropiqual-gold mx-auto mb-3" />
-              <h3 className="font-semibold text-elegant-black mb-2">Horarios</h3>
-              <p className="text-elegant-darkGray text-sm">
+              <h3 className="font-semibold text-elegant-black dark:text-dark-text mb-2">Horarios</h3>
+              <p className="text-elegant-darkGray dark:text-dark-text-secondary text-sm">
                 Dom-Jue: 18:00-02:00<br />
                 Vie-Sáb: 18:00-03:00
               </p>
             </div>
             
-            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 transition-colors">
+            <div className="glass-card p-6 text-center hover:bg-tropiqual-gold/10 dark:hover:bg-tropiqual-gold/20 transition-colors">
               <Phone className="w-8 h-8 text-tropiqual-gold mx-auto mb-3" />
-              <h3 className="font-semibold text-elegant-black mb-2">Contacto</h3>
-              <p className="text-elegant-darkGray text-sm">
+              <h3 className="font-semibold text-elegant-black dark:text-dark-text mb-2">Contacto</h3>
+              <p className="text-elegant-darkGray dark:text-dark-text-secondary text-sm">
                 +34 685 959 705<br />
                 @tropiqualsevilla
               </p>
