@@ -1,158 +1,158 @@
-# 🍣 Tropiqual - Cardápio Digital
+# 🍣 Tropiqual Company - Cardápio Digital
 
-Um cardápio digital moderno e responsivo para o restaurante **Tropiqual** em Sevilha, especializado em fusão japonesa-nikkei.
+Um cardápio digital premium e responsivo para o restaurante Tropiqual Company, desenvolvido com Next.js, React e Tailwind CSS. Design completamente reformulado com imagens, descrições detalhadas e ingredientes.
 
 ## ✨ Características
 
-### 🎨 Design
-- **Interface moderna** com tema escuro elegante
-- **Gradientes personalizados** em tons de laranja (marca Tropiqual)
-- **Animações suaves** com Framer Motion
-- **Totalmente responsivo** para desktop, tablet e mobile
+### 🌓 Tema Claro e Escuro
+- Alternância automática baseada na preferência do sistema
+- Botão manual para trocar entre temas
+- Persistência da escolha do usuário
 
-### 🍱 Conteúdo do Menu
-- **5 categorias principales:**
-  - 🍣 **Sushi & Sashimi** - Selección fresca de nuestro sushi bar
-  - 🌶️ **Fusión Nikkei** - Lo mejor de la cocina japonesa y peruana  
-  - 🔥 **Parrilla & Carnes** - Carnes y pescados a la brasa
-  - 🍸 **Cócteles de Autor** - Creaciones únicas de nuestro bar
-  - 🍰 **Postres** - Final dulce con toque japonés
+### 📱 Design Premium Responsivo
+- Layout moderno com cards visuais
+- Imagens de alta qualidade para cada prato
+- Menu hamburguer para navegação em telas menores
+- Animações suaves e interações elegantes
 
-### 📸 Características Avançadas
-- **Imágenes ilustrativas** para cada plato
-- **Descrições detalhadas** de cada item
-- **Lista de ingredientes** para cada prato
-- **Indicadores visuais:** Popular ⭐, Picante 🌶️, Vegetariano 🌱, Sin Gluten
-- **Precios en euros** claramente visibles
-- **Información del restaurante** integrada
+### 🍽️ Cardápio Visual Completo
+- **Imagens reais** para cada prato
+- **Descrições detalhadas** dos pratos e preparação
+- **Lista completa de ingredientes** para cada item
+- **Indicadores visuais** (picante, vegetariano)
+- **Preços destacados** de forma elegante
 
-## 🏪 Información del Restaurante
+#### Categorias do Menu:
+- **🥢 Entradas**: Gyoza de Pato, Tataki de Atún, Ceviche Nikkei, Edamame Especial
+- **🍣 Sushi & Sashimi**: Tropiqual Roll, Dragon Roll, Spicy Tuna Roll, Seleção de Sashimi
+- **🥩 Carnes a la Brasa**: Wagyu Beef, Pollo Teriyaki, Costillas Nikkei, Cordero Miso
+- **🐟 Pescados**: Robalo a la Brasa, Salmón Miso, Pulpo al Carbón, Dorada Nikkei
+- **🍸 Cócteles**: Gin Mojito Tropiqual, Sake Martini, Pisco Sour Nikkei, Whisky Umami
 
-**Tropiqual - Sushi & Grill**
-- 📍 **Dirección:** Plaza de la Encarnación 23, 41003 Sevilla
-- 📞 **Teléfono:** +34 685 959 705
-- 🕒 **Horarios:** 
-  - Domingo-Jueves: 18:00-02:00
-  - Viernes-Sábado: 18:00-03:00
-- 🌐 **Web:** [tropiqualcompany.com](https://www.tropiqualcompany.com)
-- 📱 **Instagram:** [@tropiqualsevilla](https://www.instagram.com/tropiqualsevilla/)
+### 🎨 Seções Especiais
+- **Hero Section** com gradientes e elementos animados
+- **Estatísticas do Restaurante** (valoração, clientes, anos, premios)
+- **Recomendações do Chef** com pratos especiais destacados
+- **Footer Premium** com informações completas
 
-## 🚀 Tecnologías Utilizadas
+### 🌟 Experiência Visual
+- Imagens profissionais de alta qualidade
+- Badges e indicadores (Mais vendido, Picante, Favorito)
+- Animações Framer Motion suaves
+- Hover effects e transições
+- Cards com sombras e profundidade
 
-- **[Next.js 14](https://nextjs.org/)** - Framework React de última generación
-- **[TypeScript](https://www.typescriptlang.org/)** - Tipado estático para JavaScript
-- **[Tailwind CSS](https://tailwindcss.com/)** - Framework de CSS utilitario
-- **[Framer Motion](https://www.framer.com/motion/)** - Librería de animaciones
-- **[Lucide React](https://lucide.dev/)** - Iconos modernos
-- **[Next/Image](https://nextjs.org/docs/api-reference/next/image)** - Optimización de imágenes
+## 🚀 Tecnologias Utilizadas
 
-## 📦 Instalación y Uso
+- **Next.js 14** - Framework React para produção
+- **React 18** - Biblioteca para interfaces de usuário
+- **TypeScript** - Tipagem estática para JavaScript
+- **Tailwind CSS** - Framework CSS utilitário
+- **Framer Motion** - Biblioteca de animações
+- **Lucide React** - Ícones modernos
 
-### Prerrequisitos
-- Node.js 18+ 
-- npm o yarn
+## 🛠️ Instalação e Execução
 
-### Instalación
-```bash
-# Clonar el repositorio
-git clone [url-del-repositorio]
+### Pré-requisitos
+- Node.js (versão 18 ou superior)
+- npm ou yarn
 
-# Navegar al directorio
-cd cardapio
+### Passos para execução
 
-# Instalar dependencias
-npm install
+1. **Clone o repositório**
+   ```bash
+   git clone https://github.com/VictorStefanes/tropiqual-menu.git
+   cd tropiqual-menu
+   ```
 
-# Iniciar servidor de desarrollo
-npm run dev
+2. **Instale as dependências**
+   ```bash
+   npm install
+   ```
+
+3. **Execute o projeto em modo de desenvolvimento**
+   ```bash
+   npm run dev
+   ```
+
+4. **Acesse no navegador**
+   ```
+   http://localhost:3000
+   ```
+
+### Scripts Disponíveis
+
+- `npm run dev` - Inicia o servidor de desenvolvimento
+- `npm run build` - Gera a build de produção
+- `npm start` - Inicia o servidor de produção
+- `npm run lint` - Executa o linter
+
+## 🎨 Paleta de Cores
+
+### Tema Claro
+- **Primário**: Tons de laranja (#ed7820)
+- **Fundo**: Branco e tons claros
+- **Texto**: Cinza escuro
+
+### Tema Escuro
+- **Primário**: Laranja suave (#f6ba79)
+- **Fundo**: Tons escuros de cinza
+- **Texto**: Branco e cinza claro
+
+## 📁 Estrutura do Projeto
+
 ```
-
-### Comandos Disponibles
-```bash
-npm run dev      # Servidor de desarrollo (http://localhost:3000)
-npm run build    # Crear build de producción
-npm run start    # Iniciar servidor de producción
-npm run lint     # Ejecutar linter
-```
-
-## 📁 Estructura del Proyecto
-
-```
-cardapio/
+tropiqual-menu/
 ├── app/
-│   ├── components/          # Componentes React
-│   │   ├── Header.tsx      # Cabecera con hero section
-│   │   ├── Menu.tsx        # Componente principal del menú
-│   │   ├── MenuItem.tsx    # Item individual del menú
-│   │   └── Footer.tsx      # Pie de página
-│   ├── data/
-│   │   └── menu.ts         # Datos del menú y tipos TypeScript
-│   ├── globals.css         # Estilos globales
-│   ├── layout.tsx          # Layout principal
-│   └── page.tsx            # Página principal
-├── public/                 # Archivos estáticos
-├── package.json           # Dependencias y scripts
-├── tailwind.config.js     # Configuración de Tailwind
-├── tsconfig.json          # Configuración de TypeScript
-└── next.config.js         # Configuración de Next.js
+│   ├── globals.css          # Estilos globais
+│   ├── layout.tsx           # Layout principal
+│   ├── page.tsx             # Página inicial
+│   └── providers.tsx        # Provedores de contexto
+├── components/
+│   └── MenuSearch.tsx       # Componente de busca (futuro)
+├── public/                  # Arquivos estáticos
+├── next.config.js           # Configuração do Next.js
+├── tailwind.config.js       # Configuração do Tailwind
+└── package.json             # Dependências e scripts
 ```
 
-## 🎨 Personalización
+## 🌟 Funcionalidades Futuras
 
-### Colores
-El tema de colores está definido en `tailwind.config.js`:
-- **Primary:** Tonos naranjas (#f97316)
-- **Dark:** Grises oscuros para el fondo
-- **Accent:** Colores complementarios para indicadores
+- [ ] Sistema de busca no cardápio
+- [ ] Filtros por categoria e preço
+- [ ] Carrinho de pedidos
+- [ ] Integração com sistema de pagamento
+- [ ] Modo offline
+- [ ] Múltiplos idiomas
+- [ ] Avaliações e comentários
 
-### Añadir Nuevos Platos
-1. Editar `app/data/menu.ts`
-2. Añadir nuevo objeto `MenuItem` con:
-   - `name`: Nombre del plato
-   - `description`: Descripción detallada
-   - `price`: Precio en euros
-   - `image`: URL de la imagen
-   - `ingredients`: Array de ingredientes
-   - `category`: Categoría correspondiente
+## 📱 Compatibilidade
 
-### Configurar Imágenes
-Las imágenes están configuradas en `next.config.js` para aceptar dominios externos como Unsplash.
+- ✅ Chrome 90+
+- ✅ Firefox 88+
+- ✅ Safari 14+
+- ✅ Edge 90+
+- ✅ Dispositivos móveis iOS/Android
 
-## 🌟 Características Especiales
+## 🤝 Contribuição
 
-- **Scroll suave** entre secciones
-- **Lazy loading** de imágenes optimizado
-- **Efectos hover** en elementos interactivos
-- **Transiciones fluidas** entre categorías
-- **Glass morphism** en tarjetas
-- **Responsive design** móvil-first
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature (`git checkout -b feature/AmazingFeature`)
+3. Commit suas mudanças (`git commit -m 'Add some AmazingFeature'`)
+4. Push para a branch (`git push origin feature/AmazingFeature`)
+5. Abra um Pull Request
 
-## 📱 Responsive Design
+## 📄 Licença
 
-- **Mobile-first:** Diseñado primero para móviles
-- **Breakpoints:** sm (640px), md (768px), lg (1024px), xl (1280px)
-- **Navegación adaptativa** según el dispositivo
-- **Imágenes responsivas** con Next/Image
+Este projeto está sob a licença MIT. Veja o arquivo [LICENSE](LICENSE) para mais detalhes.
 
-## 🚀 Deploy
+## 📞 Contato
 
-### Vercel (Recomendado)
-```bash
-npm install -g vercel
-vercel
-```
-
-### Otros Providers
-- **Netlify:** Conectar repositorio y deploy automático
-- **Digital Ocean:** App Platform
-- **Heroku:** Con buildpack de Node.js
-
-## 📞 Soporte
-
-Para soporte técnico o consultas sobre el proyecto:
-- 📧 Email: [contacto]
-- 🐛 Issues: [GitHub Issues]
+**Tropiqual Company**
+- 📍 Plaza de la Encarnación, 23 - 41003 Sevilla
+- 📞 +34 685 959 705
+- 🌐 [tropiqualcompany.com](https://www.tropiqualcompany.com)
 
 ---
 
-**Desarrollado con ❤️ para Tropiqual Sevilla**
+Desenvolvido com ❤️ para o Tropiqual Company

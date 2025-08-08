@@ -9,77 +9,41 @@ module.exports = {
   theme: {
     extend: {
       colors: {
-        // Paleta oficial Tropiqual
-        tropiqual: {
-          gold: '#D4AF37',      // Dourado elegante (principal)
-          darkGold: '#B8941F',  // Dourado escuro
-          lightGold: '#F4E4A6', // Dourado claro
-          cream: '#F5F1E8',     // Creme suave
-          bronze: '#CD7F32',    // Bronze
-        },
-        // Tons neutros elegantes da marca (versão clara) - MANTIDO INALTERADO
-        elegant: {
-          white: '#FFFFFF',     // Branco puro (fundo principal)
-          lightGray: '#F8F9FA', // Cinza muito claro (fundo secundário)
-          cream: '#F5F1E8',     // Creme suave (cards)
-          mediumGray: '#6C757D', // Cinza médio (textos secundários)
-          darkGray: '#343A40',  // Cinza escuro (textos principais)
-          black: '#212529',     // Preto suave (textos importantes)
-        },
-        // Paleta para tema escuro inspirada na imagem do logo
-        darkTheme: {
-          bg: '#1a1a1a',        // Fundo escuro principal (como na imagem)
-          surface: '#2a2a2a',   // Superfícies cards
-          card: '#333333',      // Cards com transparência
-          border: '#404040',    // Bordas sutis
-          text: '#ffffff',      // Texto principal branco
-          textSecondary: '#e0e0e0', // Texto secundário
-          textMuted: '#b0b0b0', // Texto esmaecido
-        },
-        // Cores de destaque da marca
-        accent: {
-          red: '#8B0000',       // Vermelho profundo (para picante)
-          green: '#2D5016',     // Verde escuro (para vegetariano)
-          blue: '#1E3A8A',      // Azul profundo (para sem glúten)
-        },
-        // Mantendo compatibilidade
         primary: {
-          50: '#fefce8',
-          100: '#fef3c7',
-          200: '#fde68a',
-          300: '#fcd34d',
-          400: '#D4AF37',  // Dourado principal
-          500: '#B8941F',  // Dourado escuro
-          600: '#92400e',
-          700: '#78350f',
-          800: '#451a03',
-          900: '#1c0a00',
+          50: '#fef7ee',
+          100: '#fdedd6',
+          200: '#fad7ad',
+          300: '#f6ba79',
+          400: '#f19143',
+          500: '#ed7820',
+          600: '#de5f16',
+          700: '#b84814',
+          800: '#933918',
+          900: '#763016',
         },
         dark: {
-          50: '#f8fafc',
-          100: '#f1f5f9',
-          200: '#e2e8f0',
-          300: '#cbd5e1',
-          400: '#94a3b8',
-          500: '#64748b',
-          600: '#475569',
-          700: '#334155',
-          800: '#F8F9FA',  // Cinza claro para modo claro
-          900: '#FFFFFF',  // Branco para fundo principal
+          50: '#f6f6f6',
+          100: '#e7e7e7',
+          200: '#d1d1d1',
+          300: '#b0b0b0',
+          400: '#888888',
+          500: '#6d6d6d',
+          600: '#5d5d5d',
+          700: '#4f4f4f',
+          800: '#454545',
+          900: '#3d3d3d',
+          950: '#1a1a1a',
         }
       },
       fontFamily: {
-        'japanese': ['Noto Sans JP', 'sans-serif'],
-        'elegant': ['Playfair Display', 'serif'],
-        'title': ['Inter', 'system-ui', 'sans-serif'], // Fonte moderna para o título
-        'brand': ['Inter', 'system-ui', 'sans-serif'], // Fonte da marca
+        sans: ['Inter', 'sans-serif'],
+        heading: ['Playfair Display', 'serif'],
       },
       backgroundImage: {
         'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
         'gradient-conic': 'conic-gradient(from 180deg at 50% 50%, var(--tw-gradient-stops))',
-        'tropiqual-gradient': 'linear-gradient(135deg, #D4AF37 0%, #B8941F 50%, #CD7F32 100%)',
-        'elegant-dark': 'linear-gradient(135deg, #FFFFFF 0%, #F8F9FA 50%, #F5F1E8 100%)',
-      },
+        'wood-texture': 'url("data:image/svg+xml,%3Csvg width="60" height="60" viewBox="0 0 60 60" xmlns="http://www.w3.org/2000/svg"%3E%3Cg fill="none" fill-rule="evenodd"%3E%3Cg fill="%23000" fill-opacity="0.03"%3E%3Cpath d="M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z"/%3E%3C/g%3E%3C/g%3E%3C/svg%3E")',
+      }
     },
   },
   plugins: [],

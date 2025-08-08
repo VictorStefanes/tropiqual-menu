@@ -1,0 +1,254 @@
+{
+  "entradas": [
+    {
+      "id": "demo-entrada-1",
+      "name": "Carpaccio de Atún",
+      "description": "Finas láminas de atún fresco con salsa de soja artesanal, aceite de sésamo y microgreens",
+      "price": "18€",
+      "image": "https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&h=300&fit=crop",
+      "ingredients": ["Atún rojo", "Salsa de soja", "Aceite de sésamo", "Microgreens", "Lima"],
+      "tags": ["Picante", "Fresco", "Signature"],
+      "demo": true
+    },
+    {
+      "id": "demo-entrada-2", 
+      "name": "Gyoza de Camarón",
+      "description": "Empanadillas japonesas rellenas de camarón fresco y vegetales, servidas con salsa ponzu",
+      "price": "14€",
+      "image": "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=300&fit=crop",
+      "ingredients": ["Camarón fresco", "Masa de gyoza", "Cebolla china", "Jengibre", "Salsa ponzu"],
+      "tags": ["Japonés", "Frito", "Popular"],
+      "demo": true
+    },
+    {
+      "id": "demo-entrada-3",
+      "name": "Tataki de Atún",
+      "description": "Atún fresco sellado con sésamo negro y blanco, acompañado de salsa ponzu y wasabi",
+      "price": "22€",
+      "image": "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop",
+      "ingredients": ["Atún rojo", "Sésamo negro", "Sésamo blanco", "Ponzu", "Wasabi fresco"],
+      "tags": ["Premium", "Crudo", "Gourmet"],
+      "demo": true
+    },
+    {
+      "id": "demo-entrada-4",
+      "name": "Edamame Especiado",
+      "description": "Vainas de soja cocidas al vapor con sal marina y mezcla de especias asiáticas",
+      "price": "8€",
+      "image": "https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop",
+      "ingredients": ["Edamame fresco", "Sal marina", "Ajo en polvo", "Chile en hojuelas", "Sésamo"],
+      "tags": ["Vegano", "Saludable", "Aperitivo"],
+      "demo": true
+    }
+  ],
+  "sushi": [
+    {
+      "id": "demo-sushi-1",
+      "name": "Salmón Tropical Roll",
+      "description": "Salmón fresco, palta cremosa, mango dulce y salsa de maracuyá, envuelto en arroz sushi",
+      "price": "16€",
+      "image": "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=400&h=300&fit=crop",
+      "ingredients": ["Salmón fresco", "Palta", "Mango", "Arroz sushi", "Salsa maracuyá"],
+      "tags": ["Tropical", "Popular", "Dulce"],
+      "demo": true
+    },
+    {
+      "id": "demo-sushi-2",
+      "name": "Dragon Roll",
+      "description": "Tempura de camarón y pepino, cubierto con palta y anguila glaseada con salsa teriyaki",
+      "price": "19€",
+      "image": "https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&h=300&fit=crop",
+      "ingredients": ["Tempura de camarón", "Anguila", "Palta", "Pepino", "Salsa teriyaki"],
+      "tags": ["Tempura", "Premium", "Signature"],
+      "demo": true
+    },
+    {
+      "id": "demo-sushi-3",
+      "name": "Nigiri Variado",
+      "description": "Selección de 8 piezas del chef: salmón, atún, pulpo y langostino sobre arroz sushi perfectamente sazonado",
+      "price": "24€",
+      "image": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=400&h=300&fit=crop",
+      "ingredients": ["Salmón", "Atún", "Pulpo", "Langostino", "Arroz sushi premium"],
+      "tags": ["Variado", "Tradicional", "Chef's Choice"],
+      "demo": true
+    },
+    {
+      "id": "demo-sushi-4",
+      "name": "Chirashi Bowl",
+      "description": "Variedad de sashimi fresco sobre arroz sushi con vegetales encurtidos y salsa especial de la casa",
+      "price": "28€",
+      "image": "https://images.unsplash.com/photo-1563612116625-3012372fccce?w=400&h=300&fit=crop",
+      "ingredients": ["Sashimi variado", "Arroz sushi", "Vegetales encurtidos", "Salsa especial", "Nori"],
+      "tags": ["Bowl", "Variado", "Completo"],
+      "demo": true
+    }
+  ],
+  "carnes": [
+    {
+      "id": "demo-carne-1",
+      "name": "Wagyu Nikkei",
+      "description": "Wagyu A5 premium con glaseado de miso dulce, acompañado de vegetales salteados al wok",
+      "price": "45€",
+      "image": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop",
+      "ingredients": ["Wagyu A5", "Miso dulce", "Vegetales del día", "Salsa teriyaki", "Sésamo tostado"],
+      "tags": ["Premium", "Wagyu", "Luxury"],
+      "demo": true
+    },
+    {
+      "id": "demo-carne-2",
+      "name": "Costillas Anticucheras",
+      "description": "Costillas de cerdo tiernas marinadas 24h en anticucho secreto, servidas con quinoa tricolor",
+      "price": "26€",
+      "image": "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop",
+      "ingredients": ["Costillas de cerdo", "Marinada anticucho", "Quinoa tricolor", "Ají panca", "Culantro"],
+      "tags": ["Peruano", "Marinado", "Tradicional"],
+      "demo": true
+    },
+    {
+      "id": "demo-carne-3",
+      "name": "Pollo Teriyaki",
+      "description": "Muslo de pollo jugoso glaseado con salsa teriyaki artesanal y vegetales de temporada",
+      "price": "19€",
+      "image": "https://images.unsplash.com/photo-1606909668513-0c2fe4e02d6f?w=400&h=300&fit=crop",
+      "ingredients": ["Muslo de pollo", "Salsa teriyaki artesanal", "Vegetales de temporada", "Arroz japonés", "Cebolla china"],
+      "tags": ["Japonés", "Glaseado", "Jugoso"],
+      "demo": true
+    },
+    {
+      "id": "demo-carne-4",
+      "name": "Lomo Saltado Fusion",
+      "description": "Lomo de res premium salteado con papas nativas, cebolla morada y toque asiático especial",
+      "price": "22€",
+      "image": "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
+      "ingredients": ["Lomo de res", "Papas nativas", "Cebolla morada", "Salsa de ostras", "Cilantro fresco"],
+      "tags": ["Fusion", "Saltado", "Nikkei"],
+      "demo": true
+    }
+  ],
+  "pescados": [
+    {
+      "id": "demo-pescado-1",
+      "name": "Robalo a la Plancha",
+      "description": "Robalo fresco a la plancha con salsa de maracuyá cítrica y quinoa andina con vegetales",
+      "price": "29€",
+      "image": "https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=400&h=300&fit=crop",
+      "ingredients": ["Robalo fresco", "Salsa maracuyá", "Quinoa andina", "Vegetales", "Hierbas frescas"],
+      "tags": ["Plancha", "Cítrico", "Saludable"],
+      "demo": true
+    },
+    {
+      "id": "demo-pescado-2",
+      "name": "Salmón Miso",
+      "description": "Salmón premium glaseado con miso blanco, acompañado de verduras asiáticas al vapor",
+      "price": "25€",
+      "image": "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
+      "ingredients": ["Salmón atlántico", "Miso blanco", "Verduras asiáticas", "Sake mirin", "Jengibre"],
+      "tags": ["Glaseado", "Japonés", "Premium"],
+      "demo": true
+    },
+    {
+      "id": "demo-pescado-3",
+      "name": "Tiradito de Corvina",
+      "description": "Corvina en finas láminas con leche de tigre picante y ají amarillo, decorado con microgreens",
+      "price": "20€",
+      "image": "https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&h=300&fit=crop",
+      "ingredients": ["Corvina fresca", "Leche de tigre", "Ají amarillo", "Microgreens", "Aceite de oliva"],
+      "tags": ["Crudo", "Picante", "Peruano"],
+      "demo": true
+    },
+    {
+      "id": "demo-pescado-4",
+      "name": "Pulpo al Olivo",
+      "description": "Pulpo tierno cocido lentamente con crema de olivo peruano y papas amarillas confitadas",
+      "price": "24€",
+      "image": "https://images.unsplash.com/photo-1559181567-c3190ca9959b?w=400&h=300&fit=crop",
+      "ingredients": ["Pulpo fresco", "Crema de olivo", "Papas amarillas", "Aceitunas", "Mayonesa casera"],
+      "tags": ["Cremoso", "Tradicional", "Cocido"],
+      "demo": true
+    }
+  ],
+  "cocteles": [
+    {
+      "id": "demo-coctel-1",
+      "name": "Pisco Sour Nikkei",
+      "description": "Pisco peruano premium, limón fresh, clara de huevo y toque sutil de sake japonés",
+      "price": "12€",
+      "image": "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400&h=300&fit=crop",
+      "ingredients": ["Pisco premium", "Limón fresh", "Clara de huevo", "Sake", "Amargo angostura"],
+      "tags": ["Signature", "Fusion", "Espumoso"],
+      "demo": true
+    },
+    {
+      "id": "demo-coctel-2",
+      "name": "Sake Mojito",
+      "description": "Sake premium cristalino con hierbabuena fresca, lima y agua mineral con gas",
+      "price": "14€",
+      "image": "https://images.unsplash.com/photo-1536935338686-2636089bf949?w=400&h=300&fit=crop",
+      "ingredients": ["Sake premium", "Hierbabuena", "Lima", "Agua con gas", "Azúcar de caña"],
+      "tags": ["Refrescante", "Japonés", "Herbal"],
+      "demo": true
+    },
+    {
+      "id": "demo-coctel-3",
+      "name": "Maracuyá Mule",
+      "description": "Vodka premium, pulpa de maracuyá tropical, jengibre fresco y ginger beer artesanal",
+      "price": "13€",
+      "image": "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=400&h=300&fit=crop",
+      "ingredients": ["Vodka premium", "Maracuyá", "Jengibre fresco", "Ginger beer", "Lima"],
+      "tags": ["Tropical", "Picante", "Burbujeante"],
+      "demo": true
+    },
+    {
+      "id": "demo-coctel-4",
+      "name": "Chilcano Tropical",
+      "description": "Pisco acholado, ginger ale premium, limón peruano y mezcla de frutas tropicales",
+      "price": "11€",
+      "image": "https://images.unsplash.com/photo-1570197788417-0e82375c9371?w=400&h=300&fit=crop",
+      "ingredients": ["Pisco acholado", "Ginger ale", "Limón peruano", "Frutas tropicales", "Hielo"],
+      "tags": ["Peruano", "Frutal", "Clásico"],
+      "demo": true
+    }
+  ],
+  "postres": [
+    {
+      "id": "demo-postre-1",
+      "name": "Suspiro de Limeña",
+      "description": "Dulce de leche peruano tradicional coronado con merengue suave y canela en polvo",
+      "price": "9€",
+      "image": "https://images.unsplash.com/photo-1488477181946-6428a0291777?w=400&h=300&fit=crop",
+      "ingredients": ["Dulce de leche", "Merengue", "Canela", "Vainilla", "Puerto de vino"],
+      "tags": ["Tradicional", "Dulce", "Peruano"],
+      "demo": true
+    },
+    {
+      "id": "demo-postre-2",
+      "name": "Mochi de Lúcuma",
+      "description": "Mochi japonés artesanal relleno de helado cremoso de lúcuma peruana, decorado con coco",
+      "price": "8€",
+      "image": "https://images.unsplash.com/photo-1563263420-9c50d0370465?w=400&h=300&fit=crop",
+      "ingredients": ["Mochi artesanal", "Helado de lúcuma", "Coco rallado", "Harina de arroz", "Azúcar"],
+      "tags": ["Fusion", "Helado", "Exótico"],
+      "demo": true
+    },
+    {
+      "id": "demo-postre-3",
+      "name": "Cheesecake Maracuyá",
+      "description": "Cheesecake cremoso de queso filadelfia con coulis de maracuyá tropical y base de galleta",
+      "price": "10€",
+      "image": "https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=400&h=300&fit=crop",
+      "ingredients": ["Queso filadelfia", "Maracuyá", "Galletas", "Mantequilla", "Gelatina"],
+      "tags": ["Cremoso", "Tropical", "Popular"],
+      "demo": true
+    },
+    {
+      "id": "demo-postre-4",
+      "name": "Dorayaki Artesanal",
+      "description": "Panqueques japoneses esponjosos rellenos de dulce de leche peruano y frutas de temporada",
+      "price": "7€",
+      "image": "https://images.unsplash.com/photo-1618923850107-0d7c9c3f5dd9?w=400&h=300&fit=crop",
+      "ingredients": ["Harina especial", "Dulce de leche", "Frutas de temporada", "Huevos", "Miel"],
+      "tags": ["Artesanal", "Fusion", "Esponjoso"],
+      "demo": true
+    }
+  ]
+}

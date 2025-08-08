@@ -1,0 +1,54 @@
+{
+  "active": true,
+  "title": "Recomendaciones del Chef",
+  "subtitle": "Nuestras especialidades más destacadas, seleccionadas personalmente por nuestro chef ejecutivo",
+  "recommendations": [
+    {
+      "id": "demo-chef-1",
+      "name": "Nikkei Experience",
+      "description": "Una fusión perfecta entre la tradición japonesa y los sabores peruanos. Salmón fresco marinado en leche de tigre con toques de miso y ají amarillo, acompañado de arroz sushi y vegetales de temporada.",
+      "price": "32€",
+      "category": "pescados",
+      "image": "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=500&h=400&fit=crop",
+      "badges": ["Chef's Choice", "Signature", "Premium"],
+      "specialIngredients": ["Salmón Atlántico", "Miso Artesanal", "Ají Amarillo", "Leche de Tigre"],
+      "available": true,
+      "featured": true,
+      "demo": true
+    },
+    {
+      "id": "demo-chef-2",
+      "name": "Wagyu Anticuchero",
+      "description": "Wagyu A5 marinado en nuestra receta secreta de anticucho, sellado a la perfección y acompañado de papas nativas peruanas y chimichurri nikkei. Una experiencia gastronómica única.",
+      "price": "48€",
+      "category": "carnes",
+      "image": "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=500&h=400&fit=crop",
+      "badges": ["Chef's Choice", "Premium", "Signature"],
+      "specialIngredients": ["Wagyu A5", "Anticucho Secreto", "Papas Nativas", "Chimichurri Nikkei"],
+      "available": true,
+      "featured": true,
+      "demo": true
+    },
+    {
+      "id": "demo-chef-3",
+      "name": "Omakase Tropical",
+      "description": "Déjate sorprender por nuestro chef con una selección de 8 piezas de sushi y sashimi, utilizando los mejores productos del día con influencias tropicales. Cada pieza es una obra de arte.",
+      "price": "42€",
+      "category": "sushi",
+      "image": "https://images.unsplash.com/photo-1579871494447-9811cf80d66c?w=500&h=400&fit=crop",
+      "badges": ["Chef's Choice", "Seasonal", "Fusion"],
+      "specialIngredients": ["Pescados del Día", "Frutas Tropicales", "Salsas Artesanales", "Arroz Premium"],
+      "available": true,
+      "featured": true,
+      "demo": true
+    }
+  ],
+  "settings": {
+    "maxRecommendations": 6,
+    "showBadges": true,
+    "allowCustomNames": true,
+    "featuredFirst": true
+  },
+  "lastUpdated": "2025-08-08",
+  "updatedBy": "Sistema Demo"
+}

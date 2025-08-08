@@ -1,109 +1,39 @@
-@import url('https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-@layer base {
-  html {
-    scroll-behavior: smooth;
-  }
-  
-  body {
-    @apply bg-elegant-white dark:bg-darkTheme-bg text-elegant-black dark:text-darkTheme-text font-japanese;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    transition: background-color 0.3s ease, color 0.3s ease;
-  }
-  
-  * {
-    -webkit-tap-highlight-color: transparent;
-  }
-  
-  /* Hardware acceleration for better scroll performance */
-  .scroll-smooth {
-    -webkit-overflow-scrolling: touch;
-    transform: translateZ(0);
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@400;500;600;700&display=swap');
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-start-rgb: 214, 219, 220;
+  --background-end-rgb: 255, 255, 255;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --foreground-rgb: 255, 255, 255;
+    --background-start-rgb: 0, 0, 0;
+    --background-end-rgb: 0, 0, 0;
   }
 }
 
-@layer components {
-  .section-padding {
-    @apply px-4 sm:px-6 lg:px-8;
-  }
-  
-  .card-shadow {
-    @apply shadow-lg shadow-gray-200;
-  }
-  
-  .gradient-text {
-    @apply bg-tropiqual-gradient bg-clip-text text-transparent;
-  }
-  
-  .tropiqual-gradient-bg {
-    background: linear-gradient(135deg, #D4AF37 0%, #B8941F 50%, #CD7F32 100%);
-  }
-  
-  /* Estilo especial para a letra Q destacada */
-  .brand-q {
-    position: relative;
-    display: inline-block;
-    text-shadow: 
-      0 0 10px rgba(212, 175, 55, 0.5),
-      0 0 20px rgba(212, 175, 55, 0.3),
-      0 0 30px rgba(212, 175, 55, 0.2);
-    animation: glow-pulse 3s ease-in-out infinite alternate;
-  }
-  
-  @keyframes glow-pulse {
-    0% { 
-      text-shadow: 
-        0 0 10px rgba(212, 175, 55, 0.5),
-        0 0 20px rgba(212, 175, 55, 0.3),
-        0 0 30px rgba(212, 175, 55, 0.2);
-    }
-    100% { 
-      text-shadow: 
-        0 0 15px rgba(212, 175, 55, 0.7),
-        0 0 25px rgba(212, 175, 55, 0.5),
-        0 0 35px rgba(212, 175, 55, 0.3);
-    }
-  }
-
-  .glass-card {
-    @apply bg-elegant-cream/80 dark:bg-darkTheme-card/80 backdrop-blur-md border border-tropiqual-gold/30 dark:border-tropiqual-gold/50 rounded-xl shadow-md;
-    transform: translateZ(0);
-    backface-visibility: hidden;
-    perspective: 1000px;
-  }
-  
-  /* Performance optimizations */
-  .optimize-scroll {
-    -webkit-overflow-scrolling: touch;
-    transform: translateZ(0);
-  }
-  
-  .gpu-acceleration {
-    transform: translateZ(0);
-    will-change: transform;
-  }
-  
-  /* Elegant Tropiqual styles */
-  .elegant-title {
-    @apply font-elegant text-tropiqual-gold;
-  }
-  
-  .tropiqual-button {
-    @apply bg-tropiqual-gradient hover:opacity-90 text-elegant-white font-semibold transition-all duration-200;
-  }
-  
-  .elegant-card {
-    @apply bg-elegant-lightGray/50 border border-tropiqual-gold/40 backdrop-blur-sm shadow-sm;
-  }
+html {
+  scroll-behavior: smooth;
 }
 
-.parallax {
-  background-attachment: fixed;
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: cover;
+body {
+  color: rgb(var(--foreground-rgb));
+  background: linear-gradient(
+      to bottom,
+      transparent,
+      rgb(var(--background-end-rgb))
+    )
+    rgb(var(--background-start-rgb));
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
 }
