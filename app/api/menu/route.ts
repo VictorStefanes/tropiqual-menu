@@ -73,18 +73,45 @@ export async function POST(request: Request) {
 // PUT - Atualizar item existente
 export async function PUT(request: Request) {
   try {
-    const { category, index, item }: { category: string, index: number, item: MenuItem } = await request.json()
+    const { oldItem, newItem }: { oldItem: MenuItem, newItem: MenuItem } = await request.json()
+    
+    // Validação básica
+    if (!newItem.name || !newItem.category || !newItem.price) {
+      return NextResponse.json(
+        { error: 'Nome, categoria e preço são obrigatórios' }, 
+        { status: 400 }
+      )
+    }
     
     // Ler dados atuais
     const menuData = fs.readFileSync(menuPath, 'utf8')
     const menu: MenuData = JSON.parse(menuData)
     
-    if (!menu[category] || !menu[category][index]) {
+    // Encontrar o item na categoria original
+    if (!menu[oldItem.category]) {
+      return NextResponse.json({ error: 'Categoria original não encontrada' }, { status: 404 })
+    }
+    
+    const itemIndex = menu[oldItem.category].findIndex(item => 
+      item.name === oldItem.name && 
+      item.description === oldItem.description &&
+      item.price === oldItem.price
+    )
+    
+    if (itemIndex === -1) {
       return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
     }
     
-    // Atualizar item
-    menu[category][index] = item
+    // Remover da categoria original
+    menu[oldItem.category].splice(itemIndex, 1)
+    
+    // Se a nova categoria não existe, criar
+    if (!menu[newItem.category]) {
+      menu[newItem.category] = []
+    }
+    
+    // Adicionar à nova categoria
+    menu[newItem.category].push(newItem)
     
     // Salvar de volta
     fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))
@@ -102,24 +129,28 @@ export async function PUT(request: Request) {
 // DELETE - Remover item
 export async function DELETE(request: Request) {
   try {
-    const { searchParams } = new URL(request.url)
-    const category = searchParams.get('category')
-    const index = searchParams.get('index')
+    const { category, name }: { category: string, name: string } = await request.json()
     
-    if (!category || index === null) {
-      return NextResponse.json({ error: 'Categoria e índice são obrigatórios' }, { status: 400 })
+    if (!category || !name) {
+      return NextResponse.json({ error: 'Categoria e nome são obrigatórios' }, { status: 400 })
     }
     
     // Ler dados atuais
     const menuData = fs.readFileSync(menuPath, 'utf8')
     const menu: MenuData = JSON.parse(menuData)
     
-    if (!menu[category] || !menu[category][parseInt(index)]) {
+    if (!menu[category]) {
+      return NextResponse.json({ error: 'Categoria não encontrada' }, { status: 404 })
+    }
+    
+    const itemIndex = menu[category].findIndex(item => item.name === name)
+    
+    if (itemIndex === -1) {
       return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
     }
     
     // Remover item
-    menu[category].splice(parseInt(index), 1)
+    menu[category].splice(itemIndex, 1)
     
     // Salvar de volta
     fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))

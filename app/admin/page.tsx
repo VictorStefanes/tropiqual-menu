@@ -90,6 +90,8 @@ export default function AdminPanel() {
   const [imagePreview, setImagePreview] = useState<string>('')
   const [selectedBadges, setSelectedBadges] = useState<string[]>([])
   const [newBadge, setNewBadge] = useState('')
+  const [editingItem, setEditingItem] = useState<MenuItem | null>(null)
+  const [editingRecommendation, setEditingRecommendation] = useState<Recommendation | null>(null)
 
   const badgeOptions = ['Chef\'s Choice', 'Premium', 'Seasonal', 'Signature', 'Fusion']
   const categoryOptions = [
@@ -338,6 +340,7 @@ export default function AdminPanel() {
 
   const resetNewItemForm = () => {
     setShowNewItemForm(false)
+    setEditingItem(null)
     setNewItem({
       name: '',
       description: '',
@@ -413,6 +416,14 @@ export default function AdminPanel() {
   }
 
   const handleSubmitNewItem = async () => {
+    if (editingItem) {
+      await updateMenuItem()
+    } else {
+      await addNewItem()
+    }
+  }
+
+  const addNewItem = async () => {
     if (!newItem.name.trim() || !newItem.price.trim()) {
       alert('Nome e preço são obrigatórios')
       return
@@ -420,12 +431,30 @@ export default function AdminPanel() {
 
     try {
       setSaving(true)
+      
+      let imageUrl = newItem.image
+      if (imageFile) {
+        const reader = new FileReader()
+        imageUrl = await new Promise((resolve) => {
+          reader.onload = (e) => resolve(e.target?.result as string)
+          reader.readAsDataURL(imageFile)
+        })
+      }
+
+      const formattedPrice = formatPrice(newItem.price)
+      const itemToAdd = {
+        ...newItem,
+        price: formattedPrice,
+        image: imageUrl,
+        badges: selectedBadges
+      }
+
       const response = await fetch('/api/menu', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify(newItem),
+        body: JSON.stringify(itemToAdd),
       })
 
       if (response.ok) {
@@ -449,6 +478,148 @@ export default function AdminPanel() {
       alert('Erro ao adicionar item. Tente novamente.')
     } finally {
       setSaving(false)
+    }
+  }
+
+  const deleteMenuItem = async (item: MenuItem) => {
+    if (!confirm(`¿Estás seguro de que quieres eliminar "${item.name}"?`)) {
+      return
+    }
+
+    try {
+      setSaving(true)
+      const response = await fetch('/api/menu', {
+        method: 'DELETE',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ 
+          category: item.category,
+          name: item.name 
+        }),
+      })
+
+      if (response.ok) {
+        await loadMenuItems()
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Error al eliminar item')
+      }
+    } catch (error) {
+      console.error('Error al eliminar item:', error)
+      alert('Error al eliminar item. Intenta nuevamente.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const editMenuItem = (item: MenuItem) => {
+    setEditingItem(item)
+    setNewItem({
+      name: item.name,
+      description: item.description,
+      ingredients: [...item.ingredients],
+      price: item.price,
+      spicy: item.spicy,
+      vegetarian: item.vegetarian,
+      image: item.image,
+      category: item.category,
+      badges: item.badges || []
+    })
+    setSelectedBadges(item.badges || [])
+    setImagePreview(item.image)
+    setShowNewItemForm(true)
+  }
+
+  const updateMenuItem = async () => {
+    if (!editingItem || !newItem.name.trim() || !newItem.price.trim()) {
+      alert('Por favor, completa todos los campos obligatorios')
+      return
+    }
+
+    try {
+      setSaving(true)
+      
+      let imageUrl = newItem.image
+      if (imageFile) {
+        const reader = new FileReader()
+        imageUrl = await new Promise((resolve) => {
+          reader.onload = (e) => resolve(e.target?.result as string)
+          reader.readAsDataURL(imageFile)
+        })
+      }
+
+      const formattedPrice = formatPrice(newItem.price)
+      const updatedItem = {
+        ...newItem,
+        price: formattedPrice,
+        image: imageUrl,
+        badges: selectedBadges
+      }
+
+      const response = await fetch('/api/menu', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          oldItem: editingItem,
+          newItem: updatedItem
+        }),
+      })
+
+      if (response.ok) {
+        await loadMenuItems()
+        setEditingItem(null)
+        resetNewItemForm()
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Error al actualizar item')
+      }
+    } catch (error) {
+      console.error('Error al actualizar item:', error)
+      alert('Error al actualizar item. Intenta nuevamente.')
+    } finally {
+      setSaving(false)
+    }
+  }
+
+  const deleteRecommendation = (id: string) => {
+    if (!confirm('¿Estás seguro de que quieres eliminar esta recomendación?')) {
+      return
+    }
+
+    if (data) {
+      const updatedRecommendations = data.recommendations.filter(rec => rec.id !== id)
+      setData({
+        ...data,
+        recommendations: updatedRecommendations,
+        lastUpdated: new Date().toISOString(),
+        updatedBy: adminName || 'Admin'
+      })
+    }
+  }
+
+  const editRecommendation = (recommendation: Recommendation) => {
+    setEditingRecommendation(recommendation)
+  }
+
+  const saveEditedRecommendation = (updatedRec: Recommendation) => {
+    if (data && editingRecommendation) {
+      const updatedRecommendations = data.recommendations.map(rec =>
+        rec.id === editingRecommendation.id ? updatedRec : rec
+      )
+      setData({
+        ...data,
+        recommendations: updatedRecommendations,
+        lastUpdated: new Date().toISOString(),
+        updatedBy: adminName || 'Admin'
+      })
+      setEditingRecommendation(null)
     }
   }
 
@@ -608,7 +779,7 @@ export default function AdminPanel() {
           </div>
 
           {/* Menu Categories Summary */}
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-6">
             {categoryOptions.map((category) => (
               <div key={category.value} className="text-center p-4 bg-gray-50 rounded-lg">
                 <h3 className="font-medium text-gray-900">{category.label}</h3>
@@ -618,6 +789,74 @@ export default function AdminPanel() {
                 <p className="text-sm text-gray-500">itens</p>
               </div>
             ))}
+          </div>
+
+          {/* Menu Items Management */}
+          <div>
+            <h3 className="text-lg font-semibold mb-4">Itens do Menu</h3>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-4 max-h-[60vh] overflow-y-auto">
+              {getAllMenuItems().map((item, index) => (
+                <motion.div
+                  key={`${item.category}-${item.name}-${index}`}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: index * 0.02 }}
+                  className="border border-gray-200 rounded-lg p-4 hover:shadow-md transition-shadow"
+                >
+                  <div className="flex space-x-3">
+                    <img
+                      src={item.image}
+                      alt={item.name}
+                      className="w-16 h-14 object-cover rounded-lg"
+                    />
+                    <div className="flex-1 min-w-0">
+                      <div className="flex justify-between items-start mb-2">
+                        <h4 className="font-semibold text-gray-900 text-sm truncate">{item.name}</h4>
+                        <span className="text-primary-600 font-bold text-sm ml-2">{item.price}</span>
+                      </div>
+                      <p className="text-xs text-gray-600 line-clamp-2 mb-2">
+                        {item.description}
+                      </p>
+                      <div className="flex items-center justify-between">
+                        <span className="bg-gray-100 text-gray-600 px-2 py-1 rounded text-xs">
+                          {categoryOptions.find(cat => cat.value === item.category)?.label}
+                        </span>
+                        <div className="flex space-x-1">
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              editMenuItem(item)
+                            }}
+                            className="p-1 text-blue-600 hover:bg-blue-50 rounded"
+                            title="Editar"
+                          >
+                            <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
+                            </svg>
+                          </button>
+                          <button
+                            onClick={(e) => {
+                              e.stopPropagation()
+                              deleteMenuItem(item)
+                            }}
+                            className="p-1 text-red-600 hover:bg-red-50 rounded"
+                            title="Eliminar"
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </div>
+            
+            {getAllMenuItems().length === 0 && (
+              <div className="text-center py-8 text-gray-500">
+                No hay elementos en el menú. Agrega algunos usando el botón "Adicionar Novo Item".
+              </div>
+            )}
           </div>
         </div>
 
@@ -757,8 +996,9 @@ export default function AdminPanel() {
                     </button>
                     
                     <button
-                      onClick={() => removeRecommendation(rec.id)}
+                      onClick={() => deleteRecommendation(rec.id)}
                       className="p-2 text-red-500 hover:bg-red-50 rounded-lg transition-colors"
+                      title="Eliminar recomendação"
                     >
                       <Trash2 size={16} />
                     </button>
@@ -948,7 +1188,9 @@ export default function AdminPanel() {
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
-              <h3 className="text-xl font-semibold">Adicionar Novo Item ao Menu</h3>
+              <h3 className="text-xl font-semibold">
+                {editingItem ? 'Editar Item do Menu' : 'Adicionar Novo Item ao Menu'}
+              </h3>
               <button
                 onClick={resetNewItemForm}
                 className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
@@ -1274,10 +1516,10 @@ export default function AdminPanel() {
                   disabled={saving || !newItem.name.trim() || !newItem.price.trim()}
                   className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors"
                 >
-                  {saving ? 'Adicionando...' : (
+                  {saving ? (editingItem ? 'Atualizando...' : 'Adicionando...') : (
                     <>
                       <Check size={16} className="inline mr-2" />
-                      Adicionar Item
+                      {editingItem ? 'Atualizar Item' : 'Adicionar Item'}
                     </>
                   )}
                 </button>
