@@ -1,9 +1,10 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Lock, User, Eye, EyeOff, ChefHat } from 'lucide-react'
 import { useAuth } from '../contexts/AuthContext'
+import { useRouter } from 'next/navigation'
 
 interface LoginModalProps {
   isOpen: boolean
@@ -19,6 +20,20 @@ export default function LoginModal({ isOpen, onClose, requiredRole = 'staff' }: 
   const [loading, setLoading] = useState(false)
   
   const { login } = useAuth()
+  const router = useRouter()
+
+  // Debug para verificar se os states estão sendo atualizados
+  console.log('Login Modal - Username:', username, 'Password length:', password.length)
+
+  // Limpar campos quando o modal abrir
+  useEffect(() => {
+    if (isOpen) {
+      setUsername('')
+      setPassword('')
+      setError('')
+      setShowPassword(false)
+    }
+  }, [isOpen])
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -31,6 +46,8 @@ export default function LoginModal({ isOpen, onClose, requiredRole = 'staff' }: 
         onClose()
         setUsername('')
         setPassword('')
+        // Redirecionar para o dashboard após login bem-sucedido
+        router.push('/dashboard')
       } else {
         setError('Credenciais inválidas')
       }
@@ -42,10 +59,7 @@ export default function LoginModal({ isOpen, onClose, requiredRole = 'staff' }: 
   }
 
   const demoCredentials = [
-    { user: 'admin', pass: 'admin123', role: 'Administrador' },
-    { user: 'chef', pass: 'chef123', role: 'Chef' },
-    { user: 'garcom', pass: 'staff123', role: 'Funcionário' },
-    { user: 'funcionario', pass: 'func123', role: 'Funcionário' }
+    { user: 'tropiqual', pass: 'tropiqualadmin', role: 'Administrador Principal' }
   ]
 
   if (!isOpen) return null
@@ -86,8 +100,10 @@ export default function LoginModal({ isOpen, onClose, requiredRole = 'staff' }: 
                 type="text"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white placeholder-gray-400"
                 placeholder="Digite seu usuário"
+                autoComplete="username"
+                style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                 required
               />
             </div>
@@ -103,8 +119,10 @@ export default function LoginModal({ isOpen, onClose, requiredRole = 'staff' }: 
                 type={showPassword ? 'text' : 'password'}
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
-                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent"
+                className="w-full pl-10 pr-12 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white placeholder-gray-400"
                 placeholder="Digite sua senha"
+                autoComplete="current-password"
+                style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                 required
               />
               <button

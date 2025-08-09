@@ -18,6 +18,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
   // Credenciais simples (em produção, usar autenticação real)
   const credentials = {
+    'tropiqual': { password: 'tropiqualadmin', role: 'admin' as const },
     'admin': { password: 'admin123', role: 'admin' as const },
     'chef': { password: 'chef123', role: 'admin' as const },
     'garcom': { password: 'staff123', role: 'staff' as const },

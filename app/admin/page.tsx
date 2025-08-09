@@ -29,22 +29,28 @@ interface MenuItem {
   vegetarian: boolean
   image: string
   category: string
+  badges?: string[]
 }
 
 interface Recommendation {
   id: string
-  menuItemName: string
-  customName?: string
-  useCustomName: boolean
-  customDescription?: string
-  useCustomDescription: boolean
-  customPrice?: string
-  useCustomPrice: boolean
+  name: string
+  description: string
+  price: string
+  category: string
+  image: string
   badges: string[]
   specialIngredients: string[]
   available: boolean
   featured: boolean
-  originalMenuItem: MenuItem
+  demo?: boolean
+  // Propriedades para customização
+  useCustomName?: boolean
+  customName?: string
+  useCustomDescription?: boolean
+  customDescription?: string
+  useCustomPrice?: boolean
+  customPrice?: string
 }
 
 interface RecommendationsData {
@@ -66,229 +72,69 @@ export default function AdminPanel() {
   const [adminName, setAdminName] = useState('')
   const [searchTerm, setSearchTerm] = useState('')
   const [showMenuSelector, setShowMenuSelector] = useState(false)
+  const [showNewItemForm, setShowNewItemForm] = useState(false)
+  const [newItem, setNewItem] = useState<MenuItem>({
+    name: '',
+    description: '',
+    ingredients: [],
+    price: '',
+    spicy: false,
+    vegetarian: false,
+    image: '',
+    category: 'entradas',
+    badges: []
+  })
+  const [newIngredient, setNewIngredient] = useState('')
+  const [imageUploadMode, setImageUploadMode] = useState<'url' | 'upload'>('url')
+  const [imageFile, setImageFile] = useState<File | null>(null)
+  const [imagePreview, setImagePreview] = useState<string>('')
+  const [selectedBadges, setSelectedBadges] = useState<string[]>([])
+  const [newBadge, setNewBadge] = useState('')
 
   const badgeOptions = ['Chef\'s Choice', 'Premium', 'Seasonal', 'Signature', 'Fusion']
+  const categoryOptions = [
+    { value: 'entradas', label: 'Entradas' },
+    { value: 'sushi', label: 'Sushi' },
+    { value: 'carnes', label: 'Carnes' },
+    { value: 'pescados', label: 'Pescados' },
+    { value: 'cocteles', label: 'Cócteles' },
+    { value: 'postres', label: 'Postres' }
+  ]
 
   useEffect(() => {
     loadData()
     loadMenuItems()
   }, [])
 
-  const loadMenuItems = () => {
-    // Importar los items del menú desde el componente principal
-    const menuData = {
-      entradas: [
-        {
-          name: "Gyoza de Pato",
-          description: "Deliciosos dumplings artesanales rellenos de pato confitado, servidos con nuestra exclusiva salsa ponzu casera y un toque de aceite de sésamo tostado",
-          ingredients: ["Pato confitado", "Masa de gyoza", "Cebollino", "Jengibre", "Salsa ponzu", "Aceite de sésamo"],
-          price: "14€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1496116218417-1a781b1c416c?w=400&h=300&fit=crop",
-          category: "entradas"
-        },
-        {
-          name: "Tataki de Atún",
-          description: "Atún rojo de calidad sashimi, sellado a la perfección con una costra aromática de sésamo negro, acompañado de salsa teriyaki y microgreens frescos",
-          ingredients: ["Atún rojo", "Sésamo negro", "Salsa teriyaki", "Microgreens", "Wasabi", "Jengibre encurtido"],
-          price: "18€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop",
-          category: "entradas"
-        },
-        {
-          name: "Ceviche Nikkei",
-          description: "Fusión perfecta entre la tradición peruana y japonesa. Pescado fresco del día marinado en leche de tigre con ají amarillo, acompañado de batata y maíz cancha",
-          ingredients: ["Pescado del día", "Leche de tigre", "Ají amarillo", "Cebolla morada", "Batata", "Maíz cancha"],
-          price: "16€",
-          spicy: true,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1565299624946-b28f40a0ca4b?w=400&h=300&fit=crop",
-          category: "entradas"
-        },
-        {
-          name: "Edamame Especial",
-          description: "Edamame salteado al wok con ajo dorado, guindilla fresca y sal marina de Cádiz. Un aperitivo tradicional con nuestro toque especial",
-          ingredients: ["Edamame", "Ajo", "Guindilla", "Sal marina", "Aceite de oliva", "Cebollino"],
-          price: "8€",
-          spicy: true,
-          vegetarian: true,
-          image: "https://images.unsplash.com/photo-1583394293214-28ded15ee548?w=400&h=300&fit=crop",
-          category: "entradas"
-        }
-      ],
-      sushi: [
-        {
-          name: "Tropiqual Roll",
-          description: "Nuestro roll insignia con salmón fresco, aguacate cremoso y pepino crujiente, coronado con salsa teriyaki casera y huevas de tobiko naranjas",
-          ingredients: ["Salmón fresco", "Aguacate", "Pepino", "Arroz sushi", "Nori", "Salsa teriyaki", "Tobiko"],
-          price: "15€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop",
-          category: "sushi"
-        },
-        {
-          name: "Dragon Roll",
-          description: "Espectacular roll con anguila glaseada, pepino y aguacate, cubierto con láminas de aguacate que simulan escamas de dragón y salsa unagi",
-          ingredients: ["Anguila", "Pepino", "Aguacate", "Arroz sushi", "Salsa unagi", "Sésamo", "Nori"],
-          price: "17€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&h=300&fit=crop",
-          category: "sushi"
-        },
-        {
-          name: "Spicy Tuna Roll",
-          description: "Roll picante con atún fresco marinado en mayonesa japonesa especiada, acompañado de cebollino fresco y un toque de sriracha",
-          ingredients: ["Atún rojo", "Mayonesa japonesa", "Sriracha", "Cebollino", "Arroz sushi", "Tempura flakes"],
-          price: "16€",
-          spicy: true,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1617196034796-73dfa7b1fd56?w=400&h=300&fit=crop",
-          category: "sushi"
-        },
-        {
-          name: "Sashimi Selection",
-          description: "Cuidadosa selección de los mejores pescados del día cortados por nuestro chef especializado. Incluye salmón, atún, lubina y pez mantequilla",
-          ingredients: ["Salmón", "Atún rojo", "Lubina", "Pez mantequilla", "Wasabi", "Jengibre encurtido"],
-          price: "24€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1534482421-64566f976cfa?w=400&h=300&fit=crop",
-          category: "sushi"
-        }
-      ],
-      carnes: [
-        {
-          name: "Wagyu Beef",
-          description: "Exquisito chuletón de wagyu premium cocinado a la brasa, acompañado de verduras de temporada salteadas al wok y nuestra exclusiva salsa miso dulce",
-          ingredients: ["Chuletón Wagyu", "Verduras de temporada", "Salsa miso", "Setas shiitake", "Brotes de bambú", "Aceite de sésamo"],
-          price: "45€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop",
-          category: "carnes"
-        },
-        {
-          name: "Pollo Teriyaki",
-          description: "Jugoso muslo de pollo confitado lentamente, glaseado con nuestra salsa teriyaki casera y acompañado de arroz jazmín y verduras crujientes",
-          ingredients: ["Muslo de pollo", "Salsa teriyaki", "Arroz jazmín", "Brócoli", "Zanahoria", "Pimiento rojo"],
-          price: "19€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1532550907401-a500c9a57435?w=400&h=300&fit=crop",
-          category: "carnes"
-        },
-        {
-          name: "Costillas Nikkei",
-          description: "Tiernas costillas de cerdo laqueadas con una fusión de salsa tamarindo y ají amarillo, cocinadas lentamente hasta conseguir la textura perfecta",
-          ingredients: ["Costillas de cerdo", "Salsa tamarindo", "Ají amarillo", "Miel", "Salsa de soja", "Jengibre"],
-          price: "22€",
-          spicy: true,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop",
-          category: "carnes"
-        },
-        {
-          name: "Cordero Miso",
-          description: "Selecta pierna de cordero marinada en miso rojo durante 24 horas, asada a la perfección y servida con puré de batata y espárragos trigueros",
-          ingredients: ["Pierna de cordero", "Miso rojo", "Batata", "Espárragos", "Ajo negro", "Romero"],
-          price: "28€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop",
-          category: "carnes"
-        }
-      ],
-      pescados: [
-        {
-          name: "Robalo a la Brasa",
-          description: "Robalo entero fresco del día, cocinado a la brasa con técnicas tradicionales japonesas, marinado en salsa de soja y acompañado de limón yuzu",
-          ingredients: ["Robalo entero", "Salsa de soja", "Limón yuzu", "Miso blanco", "Algas wakame", "Rábano daikon"],
-          price: "26€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1544551763-46a013bb70d5?w=400&h=300&fit=crop",
-          category: "pescados"
-        },
-        {
-          name: "Salmón Miso",
-          description: "Lomo de salmón noruego glaseado con miso blanco, cocinado a baja temperatura para mantener su jugosidad, servido sobre lecho de arroz negro",
-          ingredients: ["Salmón noruego", "Miso blanco", "Arroz negro", "Edamame", "Cebollino", "Aceite de chile"],
-          price: "23€",
-          spicy: false,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1467003909585-2f8a72700288?w=400&h=300&fit=crop",
-          category: "pescados"
-        },
-        {
-          name: "Pulpo al Carbón",
-          description: "Tentáculos de pulpo gallego tierno, cocinado al carbón y acompañado de nuestro exclusivo alioli de wasabi y papas baby confitadas",
-          ingredients: ["Pulpo gallego", "Wasabi", "Alioli", "Papas baby", "Pimentón", "Aceite de oliva"],
-          price: "21€",
-          spicy: true,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1559847844-5315695dadae?w=400&h=300&fit=crop",
-          category: "pescados"
-        },
-        {
-          name: "Dorada Nikkei",
-          description: "Dorada fresca al horno con verduras de temporada y nuestra característica salsa anticuchera, una fusión perfecta de sabores peruanos y japoneses",
-          ingredients: ["Dorada", "Salsa anticuchera", "Verduras de temporada", "Quinoa", "Ají panca", "Cilantro"],
-          price: "24€",
-          spicy: true,
-          vegetarian: false,
-          image: "https://images.unsplash.com/photo-1519708227418-c8fd9a32b7a2?w=400&h=300&fit=crop",
-          category: "pescados"
-        }
-      ],
-      cocteles: [
-        {
-          name: "Gin Mojito Tropiqual",
-          description: "Nuestra bebida estrella con gin premium, hierbabuena fresca del huerto, lima recién exprimida y nuestro toque tropical secreto con frutas exóticas",
-          ingredients: ["Gin premium", "Hierbabuena", "Lima", "Agua con gas", "Azúcar de caña", "Frutas tropicales"],
-          price: "12€",
-          spicy: false,
-          vegetarian: true,
-          image: "https://images.unsplash.com/photo-1514362545857-3bc16c4c7d1b?w=400&h=300&fit=crop",
-          category: "cocteles"
-        },
-        {
-          name: "Sake Martini",
-          description: "Elegante combinación de sake premium japonés con vodka de alta calidad, servido con aceitunas kalamata y un toque de yuzu para el paladar más exigente",
-          ingredients: ["Sake premium", "Vodka", "Aceitunas kalamata", "Yuzu", "Vermut seco", "Hielo"],
-          price: "14€",
-          spicy: false,
-          vegetarian: true,
-          image: "https://images.unsplash.com/photo-1551538827-9c037cb4f32a?w=400&h=300&fit=crop",
-          category: "cocteles"
-        },
-        {
-          name: "Pisco Sour Nikkei",
-          description: "Fusión perfecta del clásico peruano con toques japoneses, preparado con pisco acholado, clara de huevo, lima y un toque picante de ají amarillo",
-          ingredients: ["Pisco acholado", "Clara de huevo", "Lima", "Ají amarillo", "Jarabe simple", "Angostura"],
-          price: "11€",
-          spicy: true,
-          vegetarian: true,
-          image: "https://images.unsplash.com/photo-1536935338788-846bb9981813?w=400&h=300&fit=crop",
-          category: "cocteles"
-        },
-        {
-          name: "Whisky Umami",
-          description: "Innovador cóctel con whisky japonés, nuestro exclusivo miso caramelo casero y cítricos frescos, una experiencia sensorial única en cada sorbo",
-          ingredients: ["Whisky japonés", "Miso caramelo", "Cítricos", "Hielo", "Angostura", "Piel de naranja"],
-          price: "16€",
-          spicy: false,
-          vegetarian: true,
-          image: "https://images.unsplash.com/photo-1470337458703-46ad1756a187?w=400&h=300&fit=crop",
-          category: "cocteles"
-        }
-      ]
+  const loadMenuItems = async () => {
+    try {
+      const response = await fetch('/api/menu')
+      if (response.ok) {
+        const data = await response.json()
+        setMenuItems(data)
+      } else {
+        // Se a API falhar, inicializar com categorias vazias
+        setMenuItems({
+          entradas: [],
+          sushi: [],
+          carnes: [],
+          pescados: [],
+          cocteles: [],
+          postres: []
+        })
+      }
+    } catch (error) {
+      console.error('Erro ao carregar itens do menu:', error)
+      // Inicializar com categorias vazias em caso de erro
+      setMenuItems({
+        entradas: [],
+        sushi: [],
+        carnes: [],
+        pescados: [],
+        cocteles: [],
+        postres: []
+      })
     }
-    setMenuItems(menuData)
   }
 
   const getAllMenuItems = (): MenuItem[] => {
@@ -309,11 +155,31 @@ export default function AdminPanel() {
   const loadData = async () => {
     try {
       const response = await fetch('/api/chef-recommendations')
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`)
+      }
       const jsonData = await response.json()
       setData(jsonData)
       setAdminName(jsonData.updatedBy || '')
     } catch (error) {
       console.error('Error loading data:', error)
+      // Se há erro, inicializar com dados padrão
+      const defaultData = {
+        active: false,
+        title: "Recomendaciones del Chef",
+        subtitle: "Nuestras especialidades más destacadas, seleccionadas personalmente por nuestro chef ejecutivo",
+        recommendations: [],
+        settings: {
+          maxRecommendations: 6,
+          showBadges: true,
+          allowCustomNames: true,
+          featuredFirst: true
+        },
+        lastUpdated: new Date().toISOString().split('T')[0],
+        updatedBy: "Sistema Admin"
+      }
+      setData(defaultData)
+      setAdminName("Sistema Admin")
     } finally {
       setLoading(false)
     }
@@ -361,15 +227,18 @@ export default function AdminPanel() {
     
     const newRecommendation: Recommendation = {
       id: `menu-${Date.now()}`,
-      menuItemName: menuItem.name,
+      name: menuItem.name,
+      description: menuItem.description,
+      price: menuItem.price,
+      category: menuItem.category,
+      image: menuItem.image,
       useCustomName: false,
       useCustomDescription: false,
       useCustomPrice: false,
       badges: ['Chef\'s Choice'],
       specialIngredients: menuItem.ingredients.slice(0, 3),
       available: true,
-      featured: true,
-      originalMenuItem: menuItem
+      featured: true
     }
     
     setData({
@@ -413,15 +282,174 @@ export default function AdminPanel() {
   }
 
   const getDisplayName = (rec: Recommendation) => {
-    return rec.useCustomName && rec.customName ? rec.customName : rec.menuItemName
+    return rec.useCustomName && rec.customName ? rec.customName : rec.name
   }
 
   const getDisplayDescription = (rec: Recommendation) => {
-    return rec.useCustomDescription && rec.customDescription ? rec.customDescription : rec.originalMenuItem.description
+    return rec.useCustomDescription && rec.customDescription ? rec.customDescription : rec.description
   }
 
   const getDisplayPrice = (rec: Recommendation) => {
-    return rec.useCustomPrice && rec.customPrice ? rec.customPrice : rec.originalMenuItem.price
+    return rec.useCustomPrice && rec.customPrice ? rec.customPrice : rec.price
+  }
+
+  // Funções para gerenciar novo item do menu
+  const addIngredient = () => {
+    if (newIngredient.trim() && !newItem.ingredients.includes(newIngredient.trim())) {
+      setNewItem({
+        ...newItem,
+        ingredients: [...newItem.ingredients, newIngredient.trim()]
+      })
+      setNewIngredient('')
+    }
+  }
+
+  const removeIngredient = (ingredient: string) => {
+    setNewItem({
+      ...newItem,
+      ingredients: newItem.ingredients.filter(i => i !== ingredient)
+    })
+  }
+
+  const handleImageFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (file) {
+      setImageFile(file)
+      
+      // Criar preview da imagem
+      const reader = new FileReader()
+      reader.onload = (e) => {
+        const result = e.target?.result as string
+        setImagePreview(result)
+        setNewItem({...newItem, image: result})
+      }
+      reader.readAsDataURL(file)
+    }
+  }
+
+  const resetImageUpload = () => {
+    setImageFile(null)
+    setImagePreview('')
+    setNewItem({...newItem, image: ''})
+    // Reset do input file
+    const fileInput = document.getElementById('imageUpload') as HTMLInputElement
+    if (fileInput) fileInput.value = ''
+  }
+
+  const resetNewItemForm = () => {
+    setShowNewItemForm(false)
+    setNewItem({
+      name: '',
+      description: '',
+      ingredients: [],
+      price: '',
+      spicy: false,
+      vegetarian: false,
+      image: '',
+      category: 'entradas',
+      badges: []
+    })
+    setNewIngredient('')
+    setImageUploadMode('url')
+    setSelectedBadges([])
+    setNewBadge('')
+    resetImageUpload()
+  }
+
+  const addBadge = () => {
+    if (newBadge.trim() && !selectedBadges.includes(newBadge.trim())) {
+      const updatedBadges = [...selectedBadges, newBadge.trim()]
+      setSelectedBadges(updatedBadges)
+      setNewItem({...newItem, badges: updatedBadges})
+      setNewBadge('')
+    }
+  }
+
+  const removeBadge = (badge: string) => {
+    const updatedBadges = selectedBadges.filter(b => b !== badge)
+    setSelectedBadges(updatedBadges)
+    setNewItem({...newItem, badges: updatedBadges})
+  }
+
+  const togglePredefinedBadge = (badge: string) => {
+    let updatedBadges
+    if (selectedBadges.includes(badge)) {
+      updatedBadges = selectedBadges.filter(b => b !== badge)
+    } else {
+      updatedBadges = [...selectedBadges, badge]
+    }
+    setSelectedBadges(updatedBadges)
+    setNewItem({...newItem, badges: updatedBadges})
+  }
+
+  const formatPrice = (value: string) => {
+    // Remove tudo que não for número ou vírgula
+    let cleaned = value.replace(/[^\d,]/g, '')
+    
+    // Se não começar com €, adiciona
+    if (cleaned && !value.startsWith('€')) {
+      // Se não tem vírgula, adiciona ,00
+      if (!cleaned.includes(',')) {
+        cleaned = cleaned + ',00'
+      }
+      // Se tem vírgula mas não tem centavos, adiciona zeros
+      else if (cleaned.split(',')[1] === '') {
+        cleaned = cleaned + '00'
+      }
+      // Se tem só 1 dígito após vírgula, adiciona zero
+      else if (cleaned.split(',')[1].length === 1) {
+        cleaned = cleaned + '0'
+      }
+      // Se tem mais de 2 dígitos após vírgula, mantém só 2
+      else if (cleaned.split(',')[1].length > 2) {
+        const parts = cleaned.split(',')
+        cleaned = parts[0] + ',' + parts[1].substring(0, 2)
+      }
+      
+      return '€' + cleaned
+    }
+    
+    return cleaned
+  }
+
+  const handleSubmitNewItem = async () => {
+    if (!newItem.name.trim() || !newItem.price.trim()) {
+      alert('Nome e preço são obrigatórios')
+      return
+    }
+
+    try {
+      setSaving(true)
+      const response = await fetch('/api/menu', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newItem),
+      })
+
+      if (response.ok) {
+        const result = await response.json()
+        console.log('Item adicionado:', result)
+        
+        // Recarregar os itens do menu
+        await loadMenuItems()
+        
+        // Resetar formulário
+        resetNewItemForm()
+        
+        setSaved(true)
+        setTimeout(() => setSaved(false), 3000)
+      } else {
+        const error = await response.json()
+        alert(error.error || 'Erro ao adicionar item')
+      }
+    } catch (error) {
+      console.error('Erro ao adicionar item:', error)
+      alert('Erro ao adicionar item. Tente novamente.')
+    } finally {
+      setSaving(false)
+    }
   }
 
   if (loading) {
@@ -566,6 +594,33 @@ export default function AdminPanel() {
           </div>
         </div>
 
+        {/* Menu Administration */}
+        <div className="bg-white rounded-lg shadow-sm p-6 mb-8">
+          <div className="flex justify-between items-center mb-6">
+            <h2 className="text-xl font-semibold">Administração do Menu</h2>
+            <button
+              onClick={() => setShowNewItemForm(true)}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              <Plus size={16} className="mr-2" />
+              Adicionar Novo Item
+            </button>
+          </div>
+
+          {/* Menu Categories Summary */}
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+            {categoryOptions.map((category) => (
+              <div key={category.value} className="text-center p-4 bg-gray-50 rounded-lg">
+                <h3 className="font-medium text-gray-900">{category.label}</h3>
+                <p className="text-2xl font-bold text-primary-600 mt-2">
+                  {menuItems[category.value]?.length || 0}
+                </p>
+                <p className="text-sm text-gray-500">itens</p>
+              </div>
+            ))}
+          </div>
+        </div>
+
         {/* Recommendations */}
         <div className="bg-white rounded-lg shadow-sm p-6">
           <div className="flex justify-between items-center mb-6">
@@ -664,7 +719,7 @@ export default function AdminPanel() {
           )}
 
           <div className="space-y-6">
-            {data.recommendations.map((rec, index) => (
+            {data?.recommendations?.map((rec, index) => (
               <motion.div
                 key={rec.id}
                 initial={{ opacity: 0, y: 20 }}
@@ -675,8 +730,8 @@ export default function AdminPanel() {
                 <div className="flex justify-between items-start mb-4">
                   <div className="flex items-center space-x-3">
                     <img
-                      src={rec.originalMenuItem.image}
-                      alt={rec.menuItemName}
+                      src={rec.image}
+                      alt={rec.name}
                       className="w-16 h-12 object-cover rounded-lg"
                     />
                     <div>
@@ -684,7 +739,7 @@ export default function AdminPanel() {
                         {getDisplayName(rec)}
                       </h3>
                       <p className="text-sm text-gray-500">
-                        Del menú: {rec.originalMenuItem.category}
+                        Categoría: {rec.category}
                       </p>
                     </div>
                   </div>
@@ -737,7 +792,7 @@ export default function AdminPanel() {
                         />
                       ) : (
                         <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
-                          {rec.menuItemName}
+                          {rec.name}
                         </div>
                       )}
                     </div>
@@ -766,7 +821,7 @@ export default function AdminPanel() {
                         />
                       ) : (
                         <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
-                          {rec.originalMenuItem.price}
+                          {rec.price}
                         </div>
                       )}
                     </div>
@@ -819,7 +874,7 @@ export default function AdminPanel() {
                         />
                       ) : (
                         <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 max-h-20 overflow-y-auto">
-                          {rec.originalMenuItem.description}
+                          {rec.description}
                         </div>
                       )}
                     </div>
@@ -836,7 +891,7 @@ export default function AdminPanel() {
                         className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
                       />
                       <p className="text-xs text-gray-500 mt-1">
-                        Ingredientes originales: {rec.originalMenuItem.ingredients.join(', ')}
+                        Ingredientes actuales: {rec.specialIngredients.join(', ')}
                       </p>
                     </div>
 
@@ -887,6 +942,350 @@ export default function AdminPanel() {
           </div>
         </div>
       </div>
+
+      {/* New Item Form Modal */}
+      {showNewItemForm && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+            <div className="flex justify-between items-center mb-6">
+              <h3 className="text-xl font-semibold">Adicionar Novo Item ao Menu</h3>
+              <button
+                onClick={resetNewItemForm}
+                className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
+                title="Fechar"
+              >
+                <X size={20} />
+              </button>
+            </div>
+
+            <div className="space-y-4">
+              {/* Nome */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Nome do Prato *
+                </label>
+                <input
+                  type="text"
+                  value={newItem.name}
+                  onChange={(e) => setNewItem({...newItem, name: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
+                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                  placeholder="Ex: Salmão Grelhado"
+                />
+              </div>
+
+              {/* Descrição */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Descrição
+                </label>
+                <textarea
+                  value={newItem.description}
+                  onChange={(e) => setNewItem({...newItem, description: e.target.value})}
+                  rows={3}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
+                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                  placeholder="Descreva o prato, método de preparo, acompanhamentos..."
+                />
+              </div>
+
+              {/* Categoria */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Categoria *
+                </label>
+                <select
+                  value={newItem.category}
+                  onChange={(e) => setNewItem({...newItem, category: e.target.value})}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
+                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                >
+                  {categoryOptions.map((cat) => (
+                    <option key={cat.value} value={cat.value}>
+                      {cat.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Preço */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Preço *
+                </label>
+                <input
+                  type="text"
+                  value={newItem.price}
+                  onChange={(e) => {
+                    const formattedPrice = formatPrice(e.target.value)
+                    setNewItem({...newItem, price: formattedPrice})
+                  }}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
+                  style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                  placeholder="Ex: €24,90"
+                />
+              </div>
+
+              {/* Ingredientes */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Ingredientes
+                </label>
+                <div className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={newIngredient}
+                    onChange={(e) => setNewIngredient(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addIngredient()}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
+                    style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                    placeholder="Digite um ingrediente e pressione Enter"
+                  />
+                  <button
+                    onClick={addIngredient}
+                    className="px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700"
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
+                <div className="flex flex-wrap gap-2">
+                  {newItem.ingredients.map((ingredient, index) => (
+                    <span
+                      key={index}
+                      className="inline-flex items-center px-3 py-1 bg-gray-100 text-gray-700 rounded-full text-sm"
+                    >
+                      {ingredient}
+                      <button
+                        onClick={() => removeIngredient(ingredient)}
+                        className="ml-2 text-gray-500 hover:text-red-500"
+                      >
+                        <X size={14} />
+                      </button>
+                    </span>
+                  ))}
+                </div>
+              </div>
+
+              {/* Tags/Badges */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Tags do Prato
+                </label>
+                
+                {/* Tags predefinidas */}
+                <div className="mb-3">
+                  <p className="text-sm text-gray-600 mb-2">Tags sugeridas:</p>
+                  <div className="flex flex-wrap gap-2">
+                    {badgeOptions.map((badge) => (
+                      <button
+                        key={badge}
+                        onClick={() => togglePredefinedBadge(badge)}
+                        className={`px-3 py-1 rounded-full text-sm transition-colors ${
+                          selectedBadges.includes(badge)
+                            ? 'bg-primary-600 text-white'
+                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+                        }`}
+                      >
+                        {badge}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Tag personalizada */}
+                <div className="flex gap-2 mb-2">
+                  <input
+                    type="text"
+                    value={newBadge}
+                    onChange={(e) => setNewBadge(e.target.value)}
+                    onKeyPress={(e) => e.key === 'Enter' && addBadge()}
+                    className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
+                    style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                    placeholder="Digite uma tag personalizada"
+                  />
+                  <button
+                    onClick={addBadge}
+                    className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700"
+                  >
+                    <Plus size={16} />
+                  </button>
+                </div>
+
+                {/* Tags selecionadas */}
+                {selectedBadges.length > 0 && (
+                  <div className="flex flex-wrap gap-2">
+                    {selectedBadges.map((badge, index) => (
+                      <span
+                        key={index}
+                        className="inline-flex items-center px-3 py-1 bg-blue-100 text-blue-700 rounded-full text-sm font-medium"
+                      >
+                        {badge}
+                        <button
+                          onClick={() => removeBadge(badge)}
+                          className="ml-2 text-blue-500 hover:text-red-500"
+                        >
+                          <X size={14} />
+                        </button>
+                      </span>
+                    ))}
+                  </div>
+                )}
+              </div>
+
+              {/* Imagem */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  Imagem do Prato
+                </label>
+                
+                {/* Seletor de modo */}
+                <div className="flex gap-4 mb-3">
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="imageMode"
+                      checked={imageUploadMode === 'url'}
+                      onChange={() => {
+                        setImageUploadMode('url')
+                        resetImageUpload()
+                      }}
+                      className="mr-2"
+                    />
+                    URL da Imagem
+                  </label>
+                  <label className="flex items-center">
+                    <input
+                      type="radio"
+                      name="imageMode"
+                      checked={imageUploadMode === 'upload'}
+                      onChange={() => {
+                        setImageUploadMode('upload')
+                        setNewItem({...newItem, image: ''})
+                      }}
+                      className="mr-2"
+                    />
+                    Upload do Computador
+                  </label>
+                </div>
+
+                {/* Campo baseado no modo selecionado */}
+                {imageUploadMode === 'url' ? (
+                  <input
+                    type="text"
+                    value={newItem.image}
+                    onChange={(e) => setNewItem({...newItem, image: e.target.value})}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
+                    style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
+                    placeholder="https://exemplo.com/imagem.jpg"
+                  />
+                ) : (
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <input
+                        id="imageUpload"
+                        type="file"
+                        accept="image/*"
+                        onChange={handleImageFileChange}
+                        className="hidden"
+                      />
+                      <label
+                        htmlFor="imageUpload"
+                        className="flex items-center px-4 py-2 bg-gray-100 text-gray-700 rounded-lg hover:bg-gray-200 cursor-pointer transition-colors"
+                      >
+                        <Upload size={16} className="mr-2" />
+                        Escolher Arquivo
+                      </label>
+                      {imageFile && (
+                        <span className="text-sm text-gray-600">
+                          {imageFile.name}
+                        </span>
+                      )}
+                      {imageFile && (
+                        <button
+                          onClick={resetImageUpload}
+                          className="p-1 text-red-500 hover:bg-red-50 rounded"
+                        >
+                          <X size={16} />
+                        </button>
+                      )}
+                    </div>
+                    
+                    {/* Preview da imagem */}
+                    {imagePreview && (
+                      <div className="mt-3">
+                        <img
+                          src={imagePreview}
+                          alt="Preview"
+                          className="w-32 h-32 object-cover rounded-lg border"
+                        />
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* Preview para URL */}
+                {imageUploadMode === 'url' && newItem.image && (
+                  <div className="mt-3">
+                    <img
+                      src={newItem.image}
+                      alt="Preview"
+                      className="w-32 h-32 object-cover rounded-lg border"
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).style.display = 'none'
+                      }}
+                    />
+                  </div>
+                )}
+              </div>
+
+              {/* Opções */}
+              <div className="flex gap-4">
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={newItem.spicy}
+                    onChange={(e) => setNewItem({...newItem, spicy: e.target.checked})}
+                    className="mr-2 rounded text-primary-600 focus:ring-primary-500"
+                  />
+                  Apimentado
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="checkbox"
+                    checked={newItem.vegetarian}
+                    onChange={(e) => setNewItem({...newItem, vegetarian: e.target.checked})}
+                    className="mr-2 rounded text-primary-600 focus:ring-primary-500"
+                  />
+                  Vegetariano
+                </label>
+              </div>
+
+              {/* Botões */}
+              <div className="flex gap-3 pt-4">
+                <button
+                  onClick={resetNewItemForm}
+                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                >
+                  <X size={16} className="inline mr-2" />
+                  Cancelar
+                </button>
+                <button
+                  onClick={handleSubmitNewItem}
+                  disabled={saving || !newItem.name.trim() || !newItem.price.trim()}
+                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors"
+                >
+                  {saving ? 'Adicionando...' : (
+                    <>
+                      <Check size={16} className="inline mr-2" />
+                      Adicionar Item
+                    </>
+                  )}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
     </ProtectedRoute>
   )

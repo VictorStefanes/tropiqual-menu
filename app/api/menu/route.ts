@@ -2,167 +2,134 @@ import { NextResponse } from 'next/server'
 import fs from 'fs'
 import path from 'path'
 
+interface MenuItem {
+  name: string
+  description: string
+  ingredients: string[]
+  price: string
+  spicy: boolean
+  vegetarian: boolean
+  image: string
+  category: string
+}
+
+interface MenuData {
+  [key: string]: MenuItem[]
+}
+
+const menuPath = path.join(process.cwd(), 'data', 'menu-limpo.json')
+
+// GET - Ler menu
 export async function GET() {
   try {
-    const filePath = path.join(process.cwd(), 'data', 'full-menu.json')
-    const fileContent = fs.readFileSync(filePath, 'utf8')
-    const data = JSON.parse(fileContent)
-    
-    return NextResponse.json(data)
+    const menuData = fs.readFileSync(menuPath, 'utf8')
+    const menu = JSON.parse(menuData)
+    return NextResponse.json(menu)
   } catch (error) {
-    console.error('Erro ao carregar menu completo:', error)
-    return NextResponse.json({ 
-      error: 'Erro ao carregar dados do menu' 
-    }, { status: 500 })
+    console.error('Erro ao ler menu:', error)
+    return NextResponse.json({ error: 'Erro ao carregar menu' }, { status: 500 })
   }
 }
 
+// POST - Adicionar novo item ao menu
 export async function POST(request: Request) {
   try {
-    const data = await request.json()
+    const newItem: MenuItem = await request.json()
     
-    // Validar estrutura de dados
-    const requiredCategories = ['entradas', 'sushi', 'carnes', 'pescados', 'cocteles']
-    for (const category of requiredCategories) {
-      if (!data[category] || !Array.isArray(data[category])) {
-        return NextResponse.json({ 
-          error: `Categoria ${category} é obrigatória e deve ser um array` 
-        }, { status: 400 })
-      }
+    // Validação básica
+    if (!newItem.name || !newItem.category || !newItem.price) {
+      return NextResponse.json(
+        { error: 'Nome, categoria e preço são obrigatórios' }, 
+        { status: 400 }
+      )
+    }
+
+    // Ler dados atuais
+    const menuData = fs.readFileSync(menuPath, 'utf8')
+    const menu: MenuData = JSON.parse(menuData)
+    
+    // Se a categoria não existe, criar
+    if (!menu[newItem.category]) {
+      menu[newItem.category] = []
     }
     
-    // Validar cada item do menu
-    const allItems = Object.values(data).flat() as any[]
-    for (const item of allItems) {
-      if (!item.id || !item.name || !item.price) {
-        return NextResponse.json({ 
-          error: 'Todos os itens devem ter id, name e price' 
-        }, { status: 400 })
-      }
-    }
+    // Adicionar item à categoria
+    menu[newItem.category].push(newItem)
     
-    const filePath = path.join(process.cwd(), 'data', 'full-menu.json')
-    
-    // Fazer backup do arquivo anterior
-    const backupPath = path.join(process.cwd(), 'data', `full-menu-backup-${Date.now()}.json`)
-    if (fs.existsSync(filePath)) {
-      fs.copyFileSync(filePath, backupPath)
-    }
-    
-    // Salvar novo arquivo
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+    // Salvar de volta
+    fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))
     
     return NextResponse.json({ 
       success: true, 
-      message: 'Menu atualizado com sucesso!',
-      timestamp: new Date().toISOString(),
-      itemsCount: allItems.length
+      message: 'Item adicionado com sucesso',
+      item: newItem 
     })
-    
   } catch (error) {
-    console.error('Erro ao salvar menu:', error)
-    return NextResponse.json({ 
-      error: 'Erro interno do servidor' 
-    }, { status: 500 })
+    console.error('Erro ao adicionar item:', error)
+    return NextResponse.json({ error: 'Erro ao adicionar item' }, { status: 500 })
   }
 }
 
+// PUT - Atualizar item existente
 export async function PUT(request: Request) {
   try {
-    const { category, item } = await request.json()
+    const { category, index, item }: { category: string, index: number, item: MenuItem } = await request.json()
     
-    if (!category || !item || !item.id) {
-      return NextResponse.json({ 
-        error: 'Categoria e item com ID são obrigatórios' 
-      }, { status: 400 })
+    // Ler dados atuais
+    const menuData = fs.readFileSync(menuPath, 'utf8')
+    const menu: MenuData = JSON.parse(menuData)
+    
+    if (!menu[category] || !menu[category][index]) {
+      return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
     }
     
-    const filePath = path.join(process.cwd(), 'data', 'full-menu.json')
-    const fileContent = fs.readFileSync(filePath, 'utf8')
-    const data = JSON.parse(fileContent)
+    // Atualizar item
+    menu[category][index] = item
     
-    if (!data[category]) {
-      return NextResponse.json({ 
-        error: 'Categoria não encontrada' 
-      }, { status: 404 })
-    }
-    
-    // Atualizar item específico
-    const existingIndex = data[category].findIndex((i: any) => i.id === item.id)
-    
-    if (existingIndex !== -1) {
-      // Atualizar item existente
-      data[category][existingIndex] = {
-        ...item,
-        updatedAt: new Date().toISOString().split('T')[0]
-      }
-    } else {
-      // Adicionar novo item
-      data[category].push({
-        ...item,
-        createdAt: new Date().toISOString().split('T')[0],
-        updatedAt: new Date().toISOString().split('T')[0]
-      })
-    }
-    
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+    // Salvar de volta
+    fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))
     
     return NextResponse.json({ 
       success: true, 
-      message: 'Item atualizado com sucesso!',
-      item: data[category].find((i: any) => i.id === item.id)
+      message: 'Item atualizado com sucesso' 
     })
-    
   } catch (error) {
     console.error('Erro ao atualizar item:', error)
-    return NextResponse.json({ 
-      error: 'Erro interno do servidor' 
-    }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao atualizar item' }, { status: 500 })
   }
 }
 
+// DELETE - Remover item
 export async function DELETE(request: Request) {
   try {
     const { searchParams } = new URL(request.url)
     const category = searchParams.get('category')
-    const itemId = searchParams.get('id')
+    const index = searchParams.get('index')
     
-    if (!category || !itemId) {
-      return NextResponse.json({ 
-        error: 'Categoria e ID do item são obrigatórios' 
-      }, { status: 400 })
+    if (!category || index === null) {
+      return NextResponse.json({ error: 'Categoria e índice são obrigatórios' }, { status: 400 })
     }
     
-    const filePath = path.join(process.cwd(), 'data', 'full-menu.json')
-    const fileContent = fs.readFileSync(filePath, 'utf8')
-    const data = JSON.parse(fileContent)
+    // Ler dados atuais
+    const menuData = fs.readFileSync(menuPath, 'utf8')
+    const menu: MenuData = JSON.parse(menuData)
     
-    if (!data[category]) {
-      return NextResponse.json({ 
-        error: 'Categoria não encontrada' 
-      }, { status: 404 })
+    if (!menu[category] || !menu[category][parseInt(index)]) {
+      return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
     }
     
-    const initialLength = data[category].length
-    data[category] = data[category].filter((item: any) => item.id !== itemId)
+    // Remover item
+    menu[category].splice(parseInt(index), 1)
     
-    if (data[category].length === initialLength) {
-      return NextResponse.json({ 
-        error: 'Item não encontrado' 
-      }, { status: 404 })
-    }
-    
-    fs.writeFileSync(filePath, JSON.stringify(data, null, 2))
+    // Salvar de volta
+    fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))
     
     return NextResponse.json({ 
       success: true, 
-      message: 'Item removido com sucesso!' 
+      message: 'Item removido com sucesso' 
     })
-    
   } catch (error) {
     console.error('Erro ao remover item:', error)
-    return NextResponse.json({ 
-      error: 'Erro interno do servidor' 
-    }, { status: 500 })
+    return NextResponse.json({ error: 'Erro ao remover item' }, { status: 500 })
   }
 }

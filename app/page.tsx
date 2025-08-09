@@ -20,12 +20,16 @@ import {
   Utensils
 } from 'lucide-react'
 import { useTheme } from './providers'
+import { useAuth } from '../contexts/AuthContext'
+import LoginModal from '../components/LoginModal'
 import RestaurantStats from '../components/RestaurantStats'
 import ChefRecommendations from '../components/ChefRecommendationsNew'
 
 export default function Home() {
   const { theme, toggleTheme } = useTheme()
+  const { isAuthenticated, userRole } = useAuth()
   const [activeCategory, setActiveCategory] = useState('entradas')
+  const [showLoginModal, setShowLoginModal] = useState(false)
   const [menuItems, setMenuItems] = useState<any>({
     entradas: [],
     sushi: [],
@@ -35,6 +39,17 @@ export default function Home() {
     postres: []
   })
   const [loading, setLoading] = useState(true)
+
+  // Função para gerenciar acesso admin
+  const handleAdminAccess = () => {
+    if (isAuthenticated && (userRole === 'admin' || userRole === 'staff')) {
+      // Se já está autenticado, redirecionar para dashboard
+      window.location.href = '/dashboard'
+    } else {
+      // Se não está autenticado, mostrar modal de login
+      setShowLoginModal(true)
+    }
+  }
 
   useEffect(() => {
     loadMenuData()
@@ -152,8 +167,16 @@ export default function Home() {
               {/* Categories removed from header */}
             </nav>
 
-            {/* Theme Toggle Only */}
+            {/* Theme Toggle & Admin Access */}
             <div className="flex items-center space-x-3">
+              <button
+                onClick={handleAdminAccess}
+                className="hidden md:flex items-center space-x-2 px-3 py-2 text-sm font-medium text-primary-600 dark:text-primary-400 hover:bg-primary-50 dark:hover:bg-dark-800 rounded-lg transition-colors duration-200"
+              >
+                <ChefHat size={16} />
+                <span>Admin</span>
+              </button>
+              
               <button
                 onClick={toggleTheme}
                 className="p-2 rounded-full bg-primary-100 dark:bg-dark-800 text-primary-600 dark:text-primary-400 hover:bg-primary-200 dark:hover:bg-dark-700 transition-colors duration-200"
@@ -535,6 +558,13 @@ export default function Home() {
           </div>
         </div>
       </footer>
+
+      {/* Modal de Login */}
+      <LoginModal
+        isOpen={showLoginModal}
+        onClose={() => setShowLoginModal(false)}
+        requiredRole="staff"
+      />
     </div>
   )
 }
