@@ -1,8 +1,9 @@
 import { NextResponse } from 'next/server'
-import fs from 'fs'
-import path from 'path'
+import { supabase } from '@/lib/supabaseClient'
+
 
 interface MenuItem {
+  id?: string
   name: string
   description: string
   ingredients: string[]
@@ -11,154 +12,125 @@ interface MenuItem {
   vegetarian: boolean
   image: string
   category: string
+  badges?: string[]
+  created_at?: string
 }
 
 interface MenuData {
   [key: string]: MenuItem[]
 }
 
-const menuPath = path.join(process.cwd(), 'data', 'menu-limpo.json')
 
-// GET - Ler menu
+
+
+// GET - Ler menu do Supabase
 export async function GET() {
   try {
-    const menuData = fs.readFileSync(menuPath, 'utf8')
-    const menu = JSON.parse(menuData)
-    return NextResponse.json(menu)
+    const { data, error } = await supabase
+      .from('menu_items')
+      .select('*')
+      .order('category', { ascending: true })
+      .order('name', { ascending: true })
+    if (error) throw error
+    // Agrupar por categoria igual ao antigo formato
+    const grouped: { [key: string]: MenuItem[] } = {}
+    data?.forEach(item => {
+      if (!grouped[item.category]) grouped[item.category] = []
+      grouped[item.category].push(item)
+    })
+    return NextResponse.json(grouped)
   } catch (error) {
     console.error('Erro ao ler menu:', error)
     return NextResponse.json({ error: 'Erro ao carregar menu' }, { status: 500 })
   }
 }
 
-// POST - Adicionar novo item ao menu
+
+// POST - Adicionar novo item ao menu (Supabase)
 export async function POST(request: Request) {
   try {
     const newItem: MenuItem = await request.json()
-    
-    // Validação básica
     if (!newItem.name || !newItem.category || !newItem.price) {
-      return NextResponse.json(
-        { error: 'Nome, categoria e preço são obrigatórios' }, 
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Nome, categoria e preço são obrigatórios' }, { status: 400 })
     }
-
-    // Ler dados atuais
-    const menuData = fs.readFileSync(menuPath, 'utf8')
-    const menu: MenuData = JSON.parse(menuData)
-    
-    // Se a categoria não existe, criar
-    if (!menu[newItem.category]) {
-      menu[newItem.category] = []
-    }
-    
-    // Adicionar item à categoria
-    menu[newItem.category].push(newItem)
-    
-    // Salvar de volta
-    fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Item adicionado com sucesso',
-      item: newItem 
-    })
+    const { data, error } = await supabase
+      .from('menu_items')
+      .insert([{ ...newItem }])
+      .select()
+      .single()
+    if (error) throw error
+    return NextResponse.json({ success: true, message: 'Item adicionado com sucesso', item: data })
   } catch (error) {
     console.error('Erro ao adicionar item:', error)
     return NextResponse.json({ error: 'Erro ao adicionar item' }, { status: 500 })
   }
 }
 
-// PUT - Atualizar item existente
+
+// PUT - Atualizar item existente (Supabase)
 export async function PUT(request: Request) {
   try {
     const { oldItem, newItem }: { oldItem: MenuItem, newItem: MenuItem } = await request.json()
-    
-    // Validação básica
     if (!newItem.name || !newItem.category || !newItem.price) {
-      return NextResponse.json(
-        { error: 'Nome, categoria e preço são obrigatórios' }, 
-        { status: 400 }
-      )
+      return NextResponse.json({ error: 'Nome, categoria e preço são obrigatórios' }, { status: 400 })
     }
-    
-    // Ler dados atuais
-    const menuData = fs.readFileSync(menuPath, 'utf8')
-    const menu: MenuData = JSON.parse(menuData)
-    
-    // Encontrar o item na categoria original
-    if (!menu[oldItem.category]) {
-      return NextResponse.json({ error: 'Categoria original não encontrada' }, { status: 404 })
+    // Precisa do id do item antigo
+    if (!oldItem.id) {
+      // Buscar pelo nome, categoria e preço (fallback)
+      const { data: found, error: findError } = await supabase
+        .from('menu_items')
+        .select('id')
+        .eq('name', oldItem.name)
+        .eq('category', oldItem.category)
+        .eq('price', oldItem.price)
+        .limit(1)
+        .single()
+      if (findError || !found) {
+        return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
+      }
+      oldItem.id = found.id
     }
-    
-    const itemIndex = menu[oldItem.category].findIndex(item => 
-      item.name === oldItem.name && 
-      item.description === oldItem.description &&
-      item.price === oldItem.price
-    )
-    
-    if (itemIndex === -1) {
-      return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
-    }
-    
-    // Remover da categoria original
-    menu[oldItem.category].splice(itemIndex, 1)
-    
-    // Se a nova categoria não existe, criar
-    if (!menu[newItem.category]) {
-      menu[newItem.category] = []
-    }
-    
-    // Adicionar à nova categoria
-    menu[newItem.category].push(newItem)
-    
-    // Salvar de volta
-    fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Item atualizado com sucesso' 
-    })
+    const { error } = await supabase
+      .from('menu_items')
+      .update({ ...newItem })
+      .eq('id', oldItem.id)
+    if (error) throw error
+    return NextResponse.json({ success: true, message: 'Item atualizado com sucesso' })
   } catch (error) {
     console.error('Erro ao atualizar item:', error)
     return NextResponse.json({ error: 'Erro ao atualizar item' }, { status: 500 })
   }
 }
 
-// DELETE - Remover item
+
+// DELETE - Remover item (Supabase)
 export async function DELETE(request: Request) {
   try {
-    const { category, name }: { category: string, name: string } = await request.json()
-    
+    const { id, category, name }: { id?: string, category: string, name: string } = await request.json()
     if (!category || !name) {
       return NextResponse.json({ error: 'Categoria e nome são obrigatórios' }, { status: 400 })
     }
-    
-    // Ler dados atuais
-    const menuData = fs.readFileSync(menuPath, 'utf8')
-    const menu: MenuData = JSON.parse(menuData)
-    
-    if (!menu[category]) {
-      return NextResponse.json({ error: 'Categoria não encontrada' }, { status: 404 })
+    let itemId = id
+    if (!itemId) {
+      // Buscar pelo nome e categoria (fallback)
+      const { data: found, error: findError } = await supabase
+        .from('menu_items')
+        .select('id')
+        .eq('name', name)
+        .eq('category', category)
+        .limit(1)
+        .single()
+      if (findError || !found) {
+        return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
+      }
+      itemId = found.id
     }
-    
-    const itemIndex = menu[category].findIndex(item => item.name === name)
-    
-    if (itemIndex === -1) {
-      return NextResponse.json({ error: 'Item não encontrado' }, { status: 404 })
-    }
-    
-    // Remover item
-    menu[category].splice(itemIndex, 1)
-    
-    // Salvar de volta
-    fs.writeFileSync(menuPath, JSON.stringify(menu, null, 2))
-    
-    return NextResponse.json({ 
-      success: true, 
-      message: 'Item removido com sucesso' 
-    })
+    const { error } = await supabase
+      .from('menu_items')
+      .delete()
+      .eq('id', itemId)
+    if (error) throw error
+    return NextResponse.json({ success: true, message: 'Item removido com sucesso' })
   } catch (error) {
     console.error('Erro ao remover item:', error)
     return NextResponse.json({ error: 'Erro ao remover item' }, { status: 500 })

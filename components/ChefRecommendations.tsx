@@ -171,14 +171,14 @@ export default function ChefRecommendations() {
         >
           <div className="flex items-center justify-center mb-4">
             <ChefHat className="text-primary-600 dark:text-primary-400 mr-3" size={32} />
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-dark-900 dark:text-white">
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-gray-900 dark:text-white">
               {data.title}
             </h2>
           </div>
-          <p className="text-lg text-dark-600 dark:text-dark-300 max-w-2xl mx-auto">
+          <p className="text-lg text-gray-700 dark:text-gray-300 max-w-2xl mx-auto">
             {data.subtitle}
           </p>
-          <div className="mt-4 text-sm text-dark-500 dark:text-dark-400">
+          <div className="mt-4 text-sm text-gray-500 dark:text-gray-400">
             Última actualización: {new Date(data.lastUpdated).toLocaleDateString('es-ES')} por {data.updatedBy}
           </div>
         </motion.div>
@@ -230,13 +230,13 @@ export default function ChefRecommendations() {
 
               {/* Content */}
               <div className="p-6">
-                <p className="text-dark-600 dark:text-dark-300 mb-4 leading-relaxed">
+                <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed">
                   {item.description}
                 </p>
                 
                 {/* Special Ingredients */}
                 <div className="mb-4">
-                  <h4 className="text-sm font-semibold text-dark-800 dark:text-dark-200 mb-2">
+                  <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">
                     Ingredientes especiales:
                   </h4>
                   <div className="flex flex-wrap gap-1">
@@ -257,16 +257,16 @@ export default function ChefRecommendations() {
                       <ChefHat className="text-primary-600 dark:text-primary-400" size={16} />
                     </div>
                     <div>
-                      <p className="font-semibold text-dark-900 dark:text-white text-sm">
+                      <p className="font-semibold text-gray-900 dark:text-white text-sm">
                         Recomendación especial
                       </p>
-                      <p className="text-xs text-dark-500 dark:text-dark-400">
+                      <p className="text-xs text-gray-500 dark:text-gray-400">
                         Chef ejecutivo
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
-                    <div className="text-xs text-dark-500 dark:text-dark-400">
+                    <div className="text-xs text-gray-500 dark:text-gray-400">
                       Categoría: {item.category}
                     </div>
                   </div>
@@ -279,7 +279,7 @@ export default function ChefRecommendations() {
         {/* Admin note (only visible in development) */}
         {process.env.NODE_ENV === 'development' && (
           <div className="mt-8 text-center">
-            <p className="text-xs text-dark-400 bg-yellow-100 dark:bg-yellow-900 p-2 rounded">
+            <p className="text-xs text-gray-400 bg-yellow-100 dark:bg-yellow-900 p-2 rounded">
               💡 Administradores: Para modificar estas recomendaciones, editen el archivo /data/chef-recommendations.json
             </p>
           </div>
