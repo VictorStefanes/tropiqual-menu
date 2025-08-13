@@ -21,6 +21,7 @@ import {
 } from 'lucide-react'
 
 interface MenuItem {
+  id?: string
   name: string
   description: string
   ingredients: string[]
@@ -111,23 +112,24 @@ export default function AdminPanel() {
   const loadMenuItems = async () => {
     try {
       const response = await fetch('/api/menu')
+      const emptyCategories = {
+        entradas: [],
+        sushi: [],
+        carnes: [],
+        pescados: [],
+        cocteles: [],
+        postres: []
+      }
       if (response.ok) {
         const data = await response.json()
-        setMenuItems(data)
+        // Garante que todas as categorias existam, mesmo se a API não retornar todas
+        const merged = { ...emptyCategories, ...data }
+        setMenuItems(merged)
       } else {
-        // Se a API falhar, inicializar com categorias vazias
-        setMenuItems({
-          entradas: [],
-          sushi: [],
-          carnes: [],
-          pescados: [],
-          cocteles: [],
-          postres: []
-        })
+        setMenuItems(emptyCategories)
       }
     } catch (error) {
       console.error('Erro ao carregar itens do menu:', error)
-      // Inicializar com categorias vazias em caso de erro
       setMenuItems({
         entradas: [],
         sushi: [],
@@ -428,10 +430,8 @@ export default function AdminPanel() {
       alert('Nome e preço são obrigatórios')
       return
     }
-
     try {
       setSaving(true)
-      
       let imageUrl = newItem.image
       if (imageFile) {
         const reader = new FileReader()
@@ -440,15 +440,16 @@ export default function AdminPanel() {
           reader.readAsDataURL(imageFile)
         })
       }
-
-      const formattedPrice = formatPrice(newItem.price)
+      // Formatar preço para euro com 2 casas decimais
+      let priceNum = newItem.price.replace(/[^\d,]/g, '').replace(',', '.')
+      let priceFloat = parseFloat(priceNum)
+      let formattedPrice = isNaN(priceFloat) ? '€0,00' : `€${priceFloat.toFixed(2).replace('.', ',')}`
       const itemToAdd = {
         ...newItem,
         price: formattedPrice,
         image: imageUrl,
         badges: selectedBadges
       }
-
       const response = await fetch('/api/menu', {
         method: 'POST',
         headers: {
@@ -456,17 +457,10 @@ export default function AdminPanel() {
         },
         body: JSON.stringify(itemToAdd),
       })
-
       if (response.ok) {
         const result = await response.json()
-        console.log('Item adicionado:', result)
-        
-        // Recarregar os itens do menu
         await loadMenuItems()
-        
-        // Resetar formulário
         resetNewItemForm()
-        
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
       } else {
@@ -485,7 +479,6 @@ export default function AdminPanel() {
     if (!confirm(`¿Estás seguro de que quieres eliminar "${item.name}"?`)) {
       return
     }
-
     try {
       setSaving(true)
       const response = await fetch('/api/menu', {
@@ -494,11 +487,11 @@ export default function AdminPanel() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({ 
+          id: item.id,
           category: item.category,
           name: item.name 
         }),
       })
-
       if (response.ok) {
         await loadMenuItems()
         setSaved(true)
@@ -535,13 +528,11 @@ export default function AdminPanel() {
 
   const updateMenuItem = async () => {
     if (!editingItem || !newItem.name.trim() || !newItem.price.trim()) {
-      alert('Por favor, completa todos los campos obligatorios')
+      alert('Por favor, completa todos los campos obrigatórios')
       return
     }
-
     try {
       setSaving(true)
-      
       let imageUrl = newItem.image
       if (imageFile) {
         const reader = new FileReader()
@@ -550,15 +541,16 @@ export default function AdminPanel() {
           reader.readAsDataURL(imageFile)
         })
       }
-
-      const formattedPrice = formatPrice(newItem.price)
+      // Formatar preço para euro com 2 casas decimais
+      let priceNum = newItem.price.replace(/[^\d,]/g, '').replace(',', '.')
+      let priceFloat = parseFloat(priceNum)
+      let formattedPrice = isNaN(priceFloat) ? '€0,00' : `€${priceFloat.toFixed(2).replace('.', ',')}`
       const updatedItem = {
         ...newItem,
         price: formattedPrice,
         image: imageUrl,
         badges: selectedBadges
       }
-
       const response = await fetch('/api/menu', {
         method: 'PUT',
         headers: {
@@ -566,10 +558,9 @@ export default function AdminPanel() {
         },
         body: JSON.stringify({
           oldItem: editingItem,
-          newItem: updatedItem
+          newItem: { ...updatedItem, id: editingItem.id }
         }),
       })
-
       if (response.ok) {
         await loadMenuItems()
         setEditingItem(null)
@@ -578,11 +569,11 @@ export default function AdminPanel() {
         setTimeout(() => setSaved(false), 3000)
       } else {
         const error = await response.json()
-        alert(error.error || 'Error al actualizar item')
+        alert(error.error || 'Error ao atualizar item')
       }
     } catch (error) {
-      console.error('Error al actualizar item:', error)
-      alert('Error al actualizar item. Intenta nuevamente.')
+      console.error('Error ao atualizar item:', error)
+      alert('Error ao atualizar item. Tente novamente.')
     } finally {
       setSaving(false)
     }
@@ -1186,7 +1177,7 @@ export default function AdminPanel() {
       {/* New Item Form Modal */}
       {showNewItemForm && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-lg p-6 w-full max-w-2xl max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-lg p-6 w-full max-w-4xl max-h-[90vh] overflow-y-auto">
             <div className="flex justify-between items-center mb-6">
               <h3 className="text-xl font-semibold">
                 {editingItem ? 'Editar Item do Menu' : 'Adicionar Novo Item ao Menu'}
@@ -1200,9 +1191,10 @@ export default function AdminPanel() {
               </button>
             </div>
 
-            <div className="space-y-4">
+            <div className="space-y-4 md:grid md:grid-cols-2 md:gap-8 items-start">
               {/* Nome */}
-              <div>
+              {/* Coluna 1: Dados principais */}
+              <div className="space-y-4">
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Nome do Prato *
                 </label>
@@ -1252,20 +1244,36 @@ export default function AdminPanel() {
 
               {/* Preço */}
               <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label htmlFor="menu-price" className="block text-sm font-medium text-gray-700 mb-2">
                   Preço *
                 </label>
                 <input
+                  id="menu-price"
+                  name="menu-price"
                   type="text"
+                  inputMode="decimal"
+                  pattern="^€?\d{1,3}(\.\d{3})*(,\d{2})?$"
+                  aria-label="Preço em euros"
                   value={newItem.price}
                   onChange={(e) => {
-                    const formattedPrice = formatPrice(e.target.value)
-                    setNewItem({...newItem, price: formattedPrice})
+                    // Permite apenas números e vírgula
+                    let val = e.target.value.replace(/[^\d,]/g, '')
+                    setNewItem({ ...newItem, price: val })
+                  }}
+                  onBlur={(e) => {
+                    // Formata para euro ao sair do campo
+                    let val = e.target.value.replace(/[^\d,]/g, '').replace(',', '.')
+                    let num = parseFloat(val)
+                    let formatted = (!isNaN(num) && num > 0) ? `€${num.toFixed(2).replace('.', ',')}` : ''
+                    setNewItem({ ...newItem, price: formatted })
                   }}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 focus:border-transparent text-gray-900 bg-white"
                   style={{ color: '#1f2937', backgroundColor: '#ffffff' }}
                   placeholder="Ex: €24,90"
+                  autoComplete="off"
+                  required
                 />
+                <span className="text-xs text-gray-500 mt-1 block" id="price-help">Digite apenas números, o valor será formatado automaticamente.</span>
               </div>
 
               {/* Ingredientes */}
@@ -1313,7 +1321,6 @@ export default function AdminPanel() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Tags do Prato
                 </label>
-                
                 {/* Tags predefinidas */}
                 <div className="mb-3">
                   <p className="text-sm text-gray-600 mb-2">Tags sugeridas:</p>
@@ -1322,18 +1329,13 @@ export default function AdminPanel() {
                       <button
                         key={badge}
                         onClick={() => togglePredefinedBadge(badge)}
-                        className={`px-3 py-1 rounded-full text-sm transition-colors ${
-                          selectedBadges.includes(badge)
-                            ? 'bg-primary-600 text-white'
-                            : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                        }`}
+                        className={`px-3 py-1 rounded-full text-sm transition-colors ${selectedBadges.includes(badge) ? 'bg-primary-600 text-white' : 'bg-gray-100 text-gray-700 hover:bg-gray-200'}`}
                       >
                         {badge}
                       </button>
                     ))}
                   </div>
                 </div>
-
                 {/* Tag personalizada */}
                 <div className="flex gap-2 mb-2">
                   <input
@@ -1352,7 +1354,6 @@ export default function AdminPanel() {
                     <Plus size={16} />
                   </button>
                 </div>
-
                 {/* Tags selecionadas */}
                 {selectedBadges.length > 0 && (
                   <div className="flex flex-wrap gap-2">
@@ -1379,7 +1380,6 @@ export default function AdminPanel() {
                 <label className="block text-sm font-medium text-gray-700 mb-2">
                   Imagem do Prato
                 </label>
-                
                 {/* Seletor de modo */}
                 <div className="flex gap-4 mb-3">
                   <label className="flex items-center">
@@ -1409,7 +1409,6 @@ export default function AdminPanel() {
                     Upload do Computador
                   </label>
                 </div>
-
                 {/* Campo baseado no modo selecionado */}
                 {imageUploadMode === 'url' ? (
                   <input
@@ -1451,7 +1450,6 @@ export default function AdminPanel() {
                         </button>
                       )}
                     </div>
-                    
                     {/* Preview da imagem */}
                     {imagePreview && (
                       <div className="mt-3">
@@ -1464,7 +1462,6 @@ export default function AdminPanel() {
                     )}
                   </div>
                 )}
-
                 {/* Preview para URL */}
                 {imageUploadMode === 'url' && newItem.image && (
                   <div className="mt-3">
@@ -1481,40 +1478,45 @@ export default function AdminPanel() {
               </div>
 
               {/* Opções */}
-              <div className="flex gap-4">
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={newItem.spicy}
-                    onChange={(e) => setNewItem({...newItem, spicy: e.target.checked})}
-                    className="mr-2 rounded text-primary-600 focus:ring-primary-500"
-                  />
-                  Apimentado
-                </label>
-                <label className="flex items-center">
-                  <input
-                    type="checkbox"
-                    checked={newItem.vegetarian}
-                    onChange={(e) => setNewItem({...newItem, vegetarian: e.target.checked})}
-                    className="mr-2 rounded text-primary-600 focus:ring-primary-500"
-                  />
-                  Vegetariano
-                </label>
+              <div className="flex flex-col gap-2 mt-2">
+                <span className="text-sm font-medium text-gray-700 mb-1">Opções do Prato:</span>
+                <div className="flex flex-row gap-4">
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={newItem.spicy}
+                      onChange={(e) => setNewItem({...newItem, spicy: e.target.checked})}
+                      className="rounded text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="text-gray-700">Apimentado 🌶️</span>
+                  </label>
+                  <label className="flex items-center gap-2">
+                    <input
+                      type="checkbox"
+                      checked={newItem.vegetarian}
+                      onChange={(e) => setNewItem({...newItem, vegetarian: e.target.checked})}
+                      className="rounded text-primary-600 focus:ring-primary-500"
+                    />
+                    <span className="text-gray-700">Vegetariano 🥦</span>
+                  </label>
+                </div>
               </div>
 
               {/* Botões */}
-              <div className="flex gap-3 pt-4">
+              <div className="flex flex-row justify-end gap-3 pt-6 w-full md:col-span-2">
                 <button
+                  type="button"
                   onClick={resetNewItemForm}
-                  className="flex-1 px-4 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors"
+                  className="px-5 py-2 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 transition-colors font-medium flex items-center"
                 >
                   <X size={16} className="inline mr-2" />
                   Cancelar
                 </button>
                 <button
+                  type="submit"
                   onClick={handleSubmitNewItem}
                   disabled={saving || !newItem.name.trim() || !newItem.price.trim()}
-                  className="flex-1 px-4 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors"
+                  className="px-5 py-2 bg-primary-600 text-white rounded-lg hover:bg-primary-700 disabled:opacity-50 transition-colors font-medium flex items-center"
                 >
                   {saving ? (editingItem ? 'Atualizando...' : 'Adicionando...') : (
                     <>
@@ -1523,6 +1525,66 @@ export default function AdminPanel() {
                     </>
                   )}
                 </button>
+              </div>
+
+              {/* Coluna 2: Prévia visual do prato */}
+              <div className="bg-white dark:bg-dark-950 rounded-2xl shadow-xl overflow-hidden border border-gray-200 p-0 flex flex-col justify-between min-h-[420px]">
+                {/* Imagem e badges */}
+                <div className="relative h-48 overflow-hidden">
+                  <img 
+                    src={imagePreview || newItem.image || 'https://placehold.co/400x300?text=Prato'} 
+                    alt={newItem.name || 'Prato'}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute top-4 left-4 flex flex-wrap gap-2">
+                    {(selectedBadges.length > 0 ? selectedBadges : newItem.badges || []).map((badge, badgeIndex) => (
+                      <span 
+                        key={badgeIndex}
+                        className={`px-3 py-1 rounded-full text-xs font-bold flex items-center bg-primary-100 text-primary-700`}
+                      >
+                        {/* Ícone opcional para badges */}
+                        <span className="mr-1">🏷️</span>
+                        <span>{badge}</span>
+                      </span>
+                    ))}
+                  </div>
+                  <div className="absolute top-4 right-4">
+                    <span className="bg-primary-600 text-white px-3 py-2 rounded-full text-lg font-bold shadow-lg">
+                      {newItem.price || '€0,00'}
+                    </span>
+                  </div>
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
+                  <div className="absolute bottom-4 left-4 text-white">
+                    <h3 className="text-xl font-bold font-heading">{newItem.name || 'Nome do Prato'}</h3>
+                    <p className="text-sm opacity-90 capitalize">{categoryOptions.find(cat => cat.value === newItem.category)?.label || 'Categoria'}</p>
+                  </div>
+                </div>
+                {/* Conteúdo */}
+                <div className="p-6 flex-1 flex flex-col justify-between">
+                  <p className="text-gray-700 dark:text-gray-300 mb-4 leading-relaxed min-h-[48px]">
+                    {newItem.description || 'Descrição do prato...'}
+                  </p>
+                  {/* Ingredientes */}
+                  <div className="mb-4">
+                    <h4 className="text-sm font-semibold text-gray-800 dark:text-gray-200 mb-2">Ingredientes:</h4>
+                    <div className="flex flex-wrap gap-1">
+                      {(newItem.ingredients.length > 0 ? newItem.ingredients : ['Exemplo 1', 'Exemplo 2']).map((ingredient, idx) => (
+                        <span 
+                          key={idx}
+                          className="bg-primary-100 dark:bg-dark-800 text-primary-700 dark:text-primary-300 px-2 py-1 rounded-lg text-xs font-medium"
+                        >
+                          {ingredient}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                  {/* Tags/Badges */}
+                  <div className="flex flex-wrap gap-2 mt-2">
+                    {selectedBadges.map((badge, idx) => (
+                      <span key={idx} className="bg-blue-100 text-blue-700 rounded-full px-3 py-1 text-xs font-medium">{badge}</span>
+                    ))}
+                  </div>
+                </div>
               </div>
             </div>
           </div>
