@@ -145,16 +145,16 @@ export default function ChefRecommendations() {
           className="text-center mb-12"
         >
           <div className="flex items-center justify-center mb-4">
-            <ChefHat className="text-amber-600 dark:text-amber-400 mr-3" size={32} />
-            <h2 className="text-3xl md:text-4xl font-heading font-bold text-dark-900 dark:text-white">
+            <ChefHat className="text-amber-600 mr-3" size={32} />
+            <h2 className="text-3xl md:text-4xl font-heading font-bold text-black">
               {data.title}
             </h2>
           </div>
-          <p className="text-lg text-dark-600 dark:text-dark-300 max-w-3xl mx-auto">
+          <p className="text-lg text-black max-w-3xl mx-auto">
             {data.subtitle}
           </p>
           {data.updatedBy && (
-            <p className="text-sm text-amber-600 dark:text-amber-400 mt-2">
+            <p className="text-sm text-amber-600 mt-2">
               Actualizado por {data.updatedBy} • {data.lastUpdated}
             </p>
           )}
@@ -169,7 +169,7 @@ export default function ChefRecommendations() {
               viewport={{ once: true }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
               whileHover={{ scale: 1.02 }}
-              className="bg-white dark:bg-dark-950 rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-amber-100 dark:border-dark-800"
+              className="bg-white rounded-2xl shadow-lg overflow-hidden hover:shadow-xl transition-all duration-300 border border-amber-100"
             >
               {/* Image */}
               <div className="relative h-48 overflow-hidden">
@@ -209,11 +209,11 @@ export default function ChefRecommendations() {
 
               {/* Content */}
               <div className="p-6">
-                <h3 className="text-xl font-bold text-dark-900 dark:text-white mb-3 font-heading">
+                <h3 className="text-xl font-bold text-black mb-3 font-heading">
                   {getDisplayName(recommendation)}
                 </h3>
                 
-                <p className="text-dark-600 dark:text-dark-300 mb-4 leading-relaxed line-clamp-3">
+                <p className="text-black mb-4 leading-relaxed line-clamp-3">
                   {getDisplayDescription(recommendation)}
                 </p>
 
@@ -249,7 +249,7 @@ export default function ChefRecommendations() {
           transition={{ duration: 0.6, delay: 0.4 }}
           className="text-center mt-12"
         >
-          <p className="text-dark-600 dark:text-dark-400 mb-6">
+          <p className="text-black mb-6">
             ¿Te han gustado nuestras recomendaciones? Nuestro chef estará encantado de preparártelas.
           </p>
           <a
