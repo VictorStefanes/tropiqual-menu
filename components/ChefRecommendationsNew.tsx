@@ -118,7 +118,9 @@ export default function ChefRecommendations() {
   }
 
   // Filter only available recommendations
-  const availableRecommendations = data.recommendations.filter(rec => rec.available && rec.featured)
+  const availableRecommendations = data.recommendations.filter(
+    rec => rec && rec.available && rec.featured && typeof rec.category === 'string' && rec.category.trim() !== ''
+  )
 
   if (availableRecommendations.length === 0) {
     return null
