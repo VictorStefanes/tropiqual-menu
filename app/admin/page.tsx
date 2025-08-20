@@ -1019,7 +1019,7 @@ export default function AdminPanel() {
                           value={rec.customName || ''}
                           onChange={(e) => updateRecommendation(rec.id, 'customName', e.target.value)}
                           placeholder="Nombre personalizado..."
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                         />
                       ) : (
                         <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
@@ -1048,7 +1048,7 @@ export default function AdminPanel() {
                           value={rec.customPrice || ''}
                           onChange={(e) => updateRecommendation(rec.id, 'customPrice', e.target.value)}
                           placeholder="Ej: 25€"
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                         />
                       ) : (
                         <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600">
@@ -1101,7 +1101,7 @@ export default function AdminPanel() {
                           onChange={(e) => updateRecommendation(rec.id, 'customDescription', e.target.value)}
                           placeholder="Descripción personalizada..."
                           rows={3}
-                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                          className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                         />
                       ) : (
                         <div className="w-full px-3 py-2 bg-gray-50 border border-gray-200 rounded-lg text-gray-600 max-h-20 overflow-y-auto">
@@ -1119,7 +1119,7 @@ export default function AdminPanel() {
                         value={rec.specialIngredients.join(', ')}
                         onChange={(e) => updateRecommendation(rec.id, 'specialIngredients', e.target.value.split(',').map(s => s.trim()))}
                         placeholder="Ej: Wagyu A5, Sal negra, Miso dulce"
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500"
+                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-primary-500 text-gray-900"
                       />
                       <p className="text-xs text-gray-500 mt-1">
                         Ingredientes actuales: {rec.specialIngredients.join(', ')}
