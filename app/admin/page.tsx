@@ -190,6 +190,7 @@ export default function AdminPanel() {
   }
 
   const saveData = async () => {
+    console.log('[saveData] Botão Guardar Cambios clicado');
     if (!data) return
     setSaving(true)
     try {
@@ -444,6 +445,7 @@ export default function AdminPanel() {
         image: imageUrl,
         badges: selectedBadges
       }
+      console.log('Enviando item para API:', itemToAdd)
       const response = await fetch('/api/menu', {
         method: 'POST',
         headers: {
@@ -451,19 +453,24 @@ export default function AdminPanel() {
         },
         body: JSON.stringify(itemToAdd),
       })
+      let responseBody
+      try {
+        responseBody = await response.clone().json()
+      } catch (e) {
+        responseBody = await response.text()
+      }
+      console.log('Resposta da API:', response.status, responseBody)
       if (response.ok) {
-        const result = await response.json()
         await loadMenuItems()
         resetNewItemForm()
         setSaved(true)
         setTimeout(() => setSaved(false), 3000)
       } else {
-        const error = await response.json()
-        alert(error.error || 'Erro ao adicionar item')
+        alert('Erro ao adicionar item: ' + (responseBody.error || JSON.stringify(responseBody)))
       }
     } catch (error) {
-      console.error('Erro ao adicionar item:', error)
-      alert('Erro ao adicionar item. Tente novamente.')
+      console.error('Erro ao adicionar item (catch):', error)
+      alert('Erro ao adicionar item. Detalhes no console.')
     } finally {
       setSaving(false)
     }
