@@ -191,7 +191,6 @@ export default function AdminPanel() {
 
   const saveData = async () => {
     if (!data) return
-    
     setSaving(true)
     try {
       const updatedData = {
@@ -199,7 +198,6 @@ export default function AdminPanel() {
         lastUpdated: new Date().toISOString().split('T')[0],
         updatedBy: adminName || 'Administrador'
       }
-      
       const response = await fetch('/api/chef-recommendations', {
         method: 'POST',
         headers: {
@@ -207,20 +205,16 @@ export default function AdminPanel() {
         },
         body: JSON.stringify(updatedData)
       })
-      
       if (!response.ok) {
-        throw new Error('Error al guardar')
+        throw new Error('Erro ao salvar')
       }
-      
-      const result = await response.json()
-      console.log('Datos guardados:', result)
-      
-      setData(updatedData)
+      // Após salvar, recarrega os dados do Supabase para garantir que os IDs estejam corretos
+      await loadData()
       setSaved(true)
       setTimeout(() => setSaved(false), 3000)
     } catch (error) {
-      console.error('Error saving data:', error)
-      alert('Error al guardar los cambios. Inténtalo de nuevo.')
+      console.error('Erro ao salvar dados:', error)
+      alert('Erro ao salvar as mudanças. Tente novamente.')
     } finally {
       setSaving(false)
     }
